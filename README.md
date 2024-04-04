@@ -1,10 +1,10 @@
-#Learning ASP.NET and EF Core by making a basic API
+## Learning ASP.NET and EF Core by making a basic API
 
 Includes EF Core Models, ASP.NET Controlers & DTOs for WorkOrder and Department entities arranged in a Many To Many Relationship
 
 Intended to work with the Swagger API tool for testing the API directly.
 
-Lab Prompt: 
+### Lab Prompt: 
 "The current scenario is as follows: The company needs a simple application to track facilities
 (rooms) maintenance work orders. Each work order has a work order Id, a description of the job to
 be performed, the facility name (e.g room 302, room 102, etc..), a date it was submitted and the
@@ -17,6 +17,7 @@ The task is to create a simple API to
   3) complete the work order.
   4) Query all orders or by work order Id.
   5) Be able to add shops/departments to the departments catalog (table).
+
 Technology used:
 ASP.NET Core API, Entity Framework Core (code first) with migrations. SQL Server (localdb)
 At the end, you should be able to demonstrate the API functionality using Swagger or POSTman."
