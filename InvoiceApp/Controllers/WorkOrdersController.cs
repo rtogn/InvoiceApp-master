@@ -104,9 +104,15 @@ namespace InvoiceApp.Controllers
             var workOrder = await _context.WorkOrders
                 .FirstOrDefaultAsync(w => w.OrderId == id);
 
-            workOrder.DateCompleted =  DateTime.Now;
-            _context.Update(workOrder);
-            await _context.SaveChangesAsync();
+            if (workOrder != null && workOrder.DateCompleted == null) {
+                workOrder.DateCompleted = DateTime.Now;
+                _context.Update(workOrder);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return BadRequest("Work order has already been completed at time: " + workOrder.DateCompleted.ToString());
+            }
 
             var workOrderDto = WorkOrderToDTO(workOrder);
             return Ok(workOrderDto);
