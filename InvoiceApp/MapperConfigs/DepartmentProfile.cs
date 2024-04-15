@@ -13,6 +13,7 @@ namespace InvoiceApp.MapperConfigs
 
             CreateMap<Department, DepartmentDTO>();
             CreateMap<Department, DepartmentCreateDTO>();
+            CreateMap<DepartmentCreateDTO, Department>();
 
         }  
         
