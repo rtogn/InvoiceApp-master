@@ -1,8 +1,20 @@
 using InvoiceApp;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using AutoMapper;
+using InvoiceApp.Models;
+using InvoiceApp.DTO;
+using InvoiceApp.MapperConfigs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<WorkOrderProfile>();
+    cfg.AddProfile<DepartmentProfile>();
+});
+
+IMapper mapper = config.CreateMapper();
 
 // Add services to the container.
 
@@ -15,6 +27,7 @@ builder.Services.AddDbContext<InvoiceContext>(
     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("InvoiceConnection"))
     .EnableSensitiveDataLogging()
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+builder.Services.AddAutoMapper(typeof(WorkOrderProfile).Assembly); //, typeof(DepartmentProfile).Assembly);
     
 var app = builder.Build();
 

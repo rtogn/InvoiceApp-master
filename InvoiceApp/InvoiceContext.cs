@@ -42,7 +42,6 @@ namespace InvoiceApp
             modelBuilder.Entity<WorkOrder>()
                 .HasMany(w => w.Departments)
                 .WithMany(d => d.WorkOrders);
-            //.UsingEntity<WorkOrderDepartment>();
 
             //modelBuilder.Entity<WorkOrder>()
             //    .HasIndex(p => p.JobDescription).IsUnique();
@@ -54,7 +53,6 @@ namespace InvoiceApp
             modelBuilder.Entity<Department>()
                 .HasMany(d => d.WorkOrders)
                 .WithMany(w => w.Departments);
-               //.UsingEntity<WorkOrderDepartment>();
 
             /*
            modelBuilder.Entity<WorkOrder>()

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Models;
 using InvoiceApp.DTO;
+using AutoMapper;
 
 namespace InvoiceApp.Controllers
 {
@@ -10,33 +11,26 @@ namespace InvoiceApp.Controllers
     public class WorkOrdersController : ControllerBase
     {
         private readonly InvoiceContext _context;
+        private readonly IMapper _mapper;
 
-        public WorkOrdersController(InvoiceContext context)
+        public WorkOrdersController(InvoiceContext context, IMapper mapper)
         {
             _context = context;
-        }
-        private static WorkOrderDTO WorkOrderToDTO([FromBody] WorkOrder workOrder)
-        {
-            
-            return new WorkOrderDTO
-            {
-                OrderId = workOrder.OrderId,
-                JobDescription = workOrder.JobDescription,
-                FacilityName = workOrder.FacilityName,
-                DateSubmitted = workOrder.DateSubmitted,
-                DateCompleted = workOrder.DateCompleted,
-                Departments = workOrder.Departments.Select(d => d.Id).ToList()
-            };
+            _mapper = mapper;
         }
 
-        private static WorkOrder WorkOrderFromDTO([FromBody] WorkOrderCreateDTO workOrderDTO)
+        private WorkOrderDTO WorkOrderToDTO([FromBody] WorkOrder workOrder)
         {
-            return new WorkOrder
-            {
-                JobDescription = workOrderDTO.JobDescription,
-                FacilityName = workOrderDTO.FacilityName,
-                DateSubmitted = DateTime.Now,
-            };
+            var workOrderDTO = _mapper.Map<WorkOrderDTO>(workOrder);
+
+            return workOrderDTO;
+        }
+
+        private WorkOrder WorkOrderFromDTO([FromBody] WorkOrderCreateDTO workOrderDTO)
+        {
+            var workOrder = _mapper.Map<WorkOrder>(workOrderDTO);
+
+            return workOrder;
         } 
         
         // GET: api/WorkOrders
@@ -47,10 +41,23 @@ namespace InvoiceApp.Controllers
             {
                 return NotFound();
             }
-            return await _context.WorkOrders
+
+            var workOrders = await _context.WorkOrders
                 .Include(w => w.Departments)
-                .Select(w => WorkOrderToDTO(w))
                 .ToListAsync();
+            
+            /*
+             // Inital code below works, but replaced with  one-liner. 
+            var workOrderDTOs = new List<WorkOrderDTO>();
+            foreach (var workOrder in workOrders)
+            {
+                workOrderDTOs.Add(WorkOrderToDTO(workOrder));
+            }*/
+
+            // Thank you www.webdevtutor.net/blog/csharp-automapper-list-to-list
+            List<WorkOrderDTO> workOrderDTOs = _mapper.Map<List<WorkOrderDTO>>(workOrders);
+            return Ok(workOrderDTOs);
+
         }
 
         // GET: api/WorkOrders/5

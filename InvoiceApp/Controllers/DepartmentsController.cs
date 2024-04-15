@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Models;
 using InvoiceApp.DTO;
+using AutoMapper;
+using Microsoft.Data.SqlClient;
 
 namespace InvoiceApp.Controllers
 {
@@ -15,28 +17,27 @@ namespace InvoiceApp.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly InvoiceContext _context;
-
-        public DepartmentsController(InvoiceContext context)
+        private readonly IMapper _mapper;
+        public DepartmentsController(InvoiceContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-        private static DepartmentDTO DepartmentToDTO(Department deparment)
+
+        private DepartmentDTO DepartmentToDTO([FromBody] Department department)
         {
-            return new DepartmentDTO
-            {
-                Id = deparment.Id,
-                Name = deparment.Name,
-                ShortCode = deparment.ShortCode,
-            };
+            var departmentDTO = _mapper.Map<DepartmentDTO>(department);
+
+            return departmentDTO;
         }
-        private static Department DepartmentFromDTO(DepartmentCreateDTO departmentDTO)
+
+        private Department DepartmentFromDTO([FromBody] DepartmentCreateDTO departmentDTO)
         {
-            return new Department
-            {
-                Name = departmentDTO.Name,
-                ShortCode = departmentDTO.ShortCode,
-            };
+            var department = _mapper.Map<Department>(departmentDTO);
+
+            return department;
         }
+
         // GET: api/Departments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartments()
@@ -45,14 +46,21 @@ namespace InvoiceApp.Controllers
             {
                 return NotFound();
             }
+            var departments = await _context.Departments.ToListAsync();
+
+            List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
+
+            return Ok(DepartmentDTOs);
+
+            /*
             return await _context.Departments
                 .Select(d => DepartmentToDTO(d))
-                .ToListAsync();
+                .ToListAsync();*/
         }
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DepartmentDTO>> GetDepartment(int id)
+        public async Task<ActionResult<DepartmentDTO>> GetDepartment([FromRoute] int id)
         {
           if (_context.Departments == null)
           {
@@ -72,7 +80,7 @@ namespace InvoiceApp.Controllers
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDepartment(int id, DepartmentCreateDTO departmentDTO)
+        public async Task<IActionResult> PutDepartment([FromRoute] int id,[FromBody] DepartmentCreateDTO departmentDTO)
         {
             if (!DepartmentExists(id)) { return NotFound(); }
 
@@ -106,7 +114,7 @@ namespace InvoiceApp.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment(DepartmentCreateDTO deparmentDTO)
+        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO deparmentDTO)
         {
             var department = DepartmentFromDTO(deparmentDTO);
             if (_context.Departments == null)
@@ -123,7 +131,7 @@ namespace InvoiceApp.Controllers
 
         // DELETE: api/Departments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartment(int id)
+        public async Task<IActionResult> DeleteDepartment([FromRoute] int id)
         {
             if (_context.Departments == null)
             {
