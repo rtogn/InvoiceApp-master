@@ -20,8 +20,8 @@ The task is to create a simple API to
 
 ### Additional Libraries used
 The following Libraries were used as secondary requirements for the project
-	1) AutoMapper - Library that manages mapping between Models and DTOs
-	2) FluentValidation - Library to take care of validation of DTOs coming to the API
+  1) AutoMapper - Library that manages mapping between Models and DTOs
+  2) FluentValidation - Library to take care of validation of DTOs coming to the API
 
 Technology used:
 ASP.NET Core API, Entity Framework Core (code first) with migrations. SQL Server (localdb)
