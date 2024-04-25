@@ -5,6 +5,8 @@ using AutoMapper;
 using InvoiceApp.Models;
 using InvoiceApp.DTO;
 using InvoiceApp.MapperConfigs;
+using InvoiceApp.Validators;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,8 @@ IMapper mapper = config.CreateMapper();
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt=> opt.JsonSerializerOptions.ReferenceHandler=ReferenceHandler.IgnoreCycles);
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,7 +32,11 @@ builder.Services.AddDbContext<InvoiceContext>(
     .EnableSensitiveDataLogging()
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 builder.Services.AddAutoMapper(typeof(WorkOrderProfile).Assembly); //, typeof(DepartmentProfile).Assembly);
-    
+
+builder.Services.AddScoped<IValidator<WorkOrderDepartmentsDTO>, WorkOrderDepartmentsDTOValidator>();
+builder.Services.AddScoped<IValidator<WorkOrderCreateDTO>, WorkOrderCreateDTOValidator>();
+builder.Services.AddScoped<IValidator<DepartmentCreateDTO>, DepartmentCreateDTOValidator>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

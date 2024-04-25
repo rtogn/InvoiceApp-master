@@ -9,6 +9,7 @@ using InvoiceApp.Models;
 using InvoiceApp.DTO;
 using AutoMapper;
 using Microsoft.Data.SqlClient;
+using FluentValidation;
 
 namespace InvoiceApp.Controllers
 {
@@ -18,20 +19,22 @@ namespace InvoiceApp.Controllers
     {
         private readonly InvoiceContext _context;
         private readonly IMapper _mapper;
-        public DepartmentsController(InvoiceContext context, IMapper mapper)
+        private readonly IValidator<DepartmentCreateDTO> _departmentCreateValidator;
+        public DepartmentsController(InvoiceContext context, IMapper mapper, IValidator<DepartmentCreateDTO> departmentCreateValidator)
         {
             _context = context;
             _mapper = mapper;
+            _departmentCreateValidator = departmentCreateValidator;
         }
 
-        private DepartmentDTO DepartmentToDTO([FromBody] Department department)
+        private DepartmentDTO DepartmentToDTO(Department department)
         {
             var departmentDTO = _mapper.Map<DepartmentDTO>(department);
 
             return departmentDTO;
         }
 
-        private Department DepartmentFromDTO([FromBody] DepartmentCreateDTO departmentDTO)
+        private Department DepartmentFromDTO(DepartmentCreateDTO departmentDTO)
         {
             var department = _mapper.Map<Department>(departmentDTO);
 
@@ -51,11 +54,6 @@ namespace InvoiceApp.Controllers
             List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
 
             return Ok(DepartmentDTOs);
-
-            /*
-            return await _context.Departments
-                .Select(d => DepartmentToDTO(d))
-                .ToListAsync();*/
         }
 
         // GET: api/Departments/5
@@ -82,6 +80,9 @@ namespace InvoiceApp.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDepartment([FromRoute] int id,[FromBody] DepartmentCreateDTO departmentDTO)
         {
+            FluentValidation.Results.ValidationResult result = await _departmentCreateValidator.ValidateAsync(departmentDTO);
+            if (!result.IsValid) { return BadRequest("Invalid department submitted. Name must be more than 2 characters."); }
+
             if (!DepartmentExists(id)) { return NotFound(); }
 
             Department department = await _context.Departments
@@ -114,9 +115,12 @@ namespace InvoiceApp.Controllers
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO deparmentDTO)
+        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO departmentDTO_in)
         {
-            var department = DepartmentFromDTO(deparmentDTO);
+            FluentValidation.Results.ValidationResult result = await _departmentCreateValidator.ValidateAsync(departmentDTO_in);
+            if (!result.IsValid) { return BadRequest("Invalid department submitted. Name must be more than 2 characters."); }
+
+            var department = DepartmentFromDTO(departmentDTO_in);
             if (_context.Departments == null)
             {
                 return Problem("Entity set 'InvoiceContext.Departments'  is null.");
@@ -125,8 +129,8 @@ namespace InvoiceApp.Controllers
             await _context.SaveChangesAsync();
 
 
-            var departmentDTO = DepartmentToDTO(department);
-            return Ok(departmentDTO);
+            var departmentDTO_out = DepartmentToDTO(department);
+            return Ok(departmentDTO_out);
         }
 
         // DELETE: api/Departments/5

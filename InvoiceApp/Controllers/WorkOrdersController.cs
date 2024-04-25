@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Models;
 using InvoiceApp.DTO;
+using InvoiceApp.Validators;
 using AutoMapper;
+using FluentValidation;
+using System.ComponentModel.DataAnnotations;
 
 namespace InvoiceApp.Controllers
 {
@@ -12,21 +15,25 @@ namespace InvoiceApp.Controllers
     {
         private readonly InvoiceContext _context;
         private readonly IMapper _mapper;
+        private readonly IValidator<WorkOrderDepartmentsDTO> _workOrderDpeartmentsValidator;
+        private readonly IValidator<WorkOrderCreateDTO> _workOrderCreateValidator;
 
-        public WorkOrdersController(InvoiceContext context, IMapper mapper)
+        public WorkOrdersController(InvoiceContext context, IMapper mapper, IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator, IValidator<WorkOrderCreateDTO> workOrderCreateValidator, IValidator<WorkOrderDTO> workOrderValidator)
         {
             _context = context;
             _mapper = mapper;
+            _workOrderDpeartmentsValidator = workOrderDpeartmentsValidator;
+            _workOrderCreateValidator = workOrderCreateValidator;
         }
 
-        private WorkOrderDTO WorkOrderToDTO([FromBody] WorkOrder workOrder)
+        private WorkOrderDTO WorkOrderToDTO(WorkOrder workOrder)
         {
             var workOrderDTO = _mapper.Map<WorkOrderDTO>(workOrder);
 
             return workOrderDTO;
         }
 
-        private WorkOrder WorkOrderFromDTO([FromBody] WorkOrderCreateDTO workOrderDTO)
+        private WorkOrder WorkOrderFromDTO(WorkOrderCreateDTO workOrderDTO)
         {
             var workOrder = _mapper.Map<WorkOrder>(workOrderDTO);
 
@@ -45,16 +52,7 @@ namespace InvoiceApp.Controllers
             var workOrders = await _context.WorkOrders
                 .Include(w => w.Departments)
                 .ToListAsync();
-            
-            /*
-             // Inital code below works, but replaced with  one-liner. 
-            var workOrderDTOs = new List<WorkOrderDTO>();
-            foreach (var workOrder in workOrders)
-            {
-                workOrderDTOs.Add(WorkOrderToDTO(workOrder));
-            }*/
 
-            // Thank you www.webdevtutor.net/blog/csharp-automapper-list-to-list
             List<WorkOrderDTO> workOrderDTOs = _mapper.Map<List<WorkOrderDTO>>(workOrders);
             return Ok(workOrderDTOs);
 
@@ -122,6 +120,10 @@ namespace InvoiceApp.Controllers
         [HttpPut("AddDepartmentToWorkOrder/{id}")]
         public async Task<IActionResult> AddDepartmentToWorkOrder([FromRoute] int id, [FromBody] WorkOrderDepartmentsDTO workOrderDepartmentsDTO)
         {
+
+            FluentValidation.Results.ValidationResult result = await _workOrderDpeartmentsValidator.ValidateAsync(workOrderDepartmentsDTO);
+            if (!result.IsValid) { return BadRequest("Invalid Work Order Data submitted"); } 
+
             if (!WorkOrderExists(id)) { return NotFound(); }
             
             var workOrder = await _context.WorkOrders
@@ -147,10 +149,10 @@ namespace InvoiceApp.Controllers
         [HttpPost("CreateWorkOrder")]
         public async Task<ActionResult<WorkOrderCreateDTO>> CreateWorkOrder([FromBody] WorkOrderCreateDTO workOrderDto)
         {
-            if (workOrderDto.Departments == null || workOrderDto.Departments.Count == 0) 
-            { 
-                return BadRequest("A work order must have at least one department");
-            }
+
+
+            FluentValidation.Results.ValidationResult result = await _workOrderCreateValidator.ValidateAsync(workOrderDto);
+            if (!result.IsValid) { return BadRequest("A work order must have at least one valid department"); }
 
             WorkOrder workOrder = WorkOrderFromDTO(workOrderDto);
 
