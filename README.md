@@ -18,6 +18,11 @@ The task is to create a simple API to
   4) Query all orders or by work order Id.
   5) Be able to add shops/departments to the departments catalog (table).
 
+### Additional Libraries used
+The following Libraries were used as secondary requirements for the project
+	1) AutoMapper - Library that manages mapping between Models and DTOs
+	2) FluentValidation - Library to take care of validation of DTOs coming to the API
+
 Technology used:
 ASP.NET Core API, Entity Framework Core (code first) with migrations. SQL Server (localdb)
 At the end, you should be able to demonstrate the API functionality using Swagger or POSTman."
