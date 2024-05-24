@@ -4,8 +4,12 @@ using InvoiceApp.Models;
 using InvoiceApp.DTO;
 using InvoiceApp.Validators;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Azure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
 using System.ComponentModel.DataAnnotations;
+
 
 namespace InvoiceApp.Controllers
 {
@@ -14,16 +18,17 @@ namespace InvoiceApp.Controllers
     public class WorkOrdersController : ControllerBase
     {
         private readonly InvoiceContext _context;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;      
         private readonly IValidator<WorkOrderDepartmentsDTO> _workOrderDpeartmentsValidator;
         private readonly IValidator<WorkOrderCreateDTO> _workOrderCreateValidator;
-
-        public WorkOrdersController(InvoiceContext context, IMapper mapper, IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator, IValidator<WorkOrderCreateDTO> workOrderCreateValidator, IValidator<WorkOrderDTO> workOrderValidator)
+        private readonly TokenManager _tokenService;
+        public WorkOrdersController(InvoiceContext context, IMapper mapper, IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator, IValidator<WorkOrderCreateDTO> workOrderCreateValidator, IValidator<WorkOrderDTO> workOrderValidator, TokenManager tokenService)
         {
             _context = context;
             _mapper = mapper;
             _workOrderDpeartmentsValidator = workOrderDpeartmentsValidator;
             _workOrderCreateValidator = workOrderCreateValidator;
+            _tokenService = tokenService;
         }
 
         private WorkOrderDTO WorkOrderToDTO(WorkOrder workOrder)
@@ -38,10 +43,26 @@ namespace InvoiceApp.Controllers
             var workOrder = _mapper.Map<WorkOrder>(workOrderDTO);
 
             return workOrder;
-        } 
-        
+        }
+
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody] User user)
+        {
+            // Hardcoded in place of server call
+            string username_HC = "string";
+            string password_HC = "string";
+
+            if (user.UserName == username_HC && user.Password == password_HC)
+            {
+                var token = _tokenService.Authenticate(user.UserName);
+                return Ok(new { Token = token });
+            };
+
+            return Unauthorized();
+        }
+
         // GET: api/WorkOrders
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<WorkOrderDTO>>> GetWorkOrders()
         {
             if (_context.WorkOrders == null)
@@ -52,14 +73,13 @@ namespace InvoiceApp.Controllers
             var workOrders = await _context.WorkOrders
                 .Include(w => w.Departments)
                 .ToListAsync();
-
             List<WorkOrderDTO> workOrderDTOs = _mapper.Map<List<WorkOrderDTO>>(workOrders);
             return Ok(workOrderDTOs);
 
         }
 
         // GET: api/WorkOrders/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<WorkOrderDTO>> GetWorkOrder([FromRoute] int id)
         {
             if (_context.WorkOrders == null)
@@ -79,7 +99,7 @@ namespace InvoiceApp.Controllers
         }
 
         // PUT: api/WorkOrders/5
-        [HttpPut("CompleteWorkOrderAtTime/{id}")]
+        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         public async Task<IActionResult> CompleteWorkOrderAtTime([FromRoute] int id, [FromBody] DateTime dateCompleted)
         {
             if (!WorkOrderExists(id)) { return NotFound(); }
@@ -95,7 +115,7 @@ namespace InvoiceApp.Controllers
         }
 
         // PUT: api/WorkOrders/5
-        [HttpPut("CompleteWorkOrder/{id}")]
+        [HttpPut("CompleteWorkOrder/{id}"), Authorize]
         public async Task<IActionResult> CompleteWorkOrder([FromRoute] int id)
         {
             if (!WorkOrderExists(id)) { return NotFound(); }
@@ -117,7 +137,7 @@ namespace InvoiceApp.Controllers
         }
 
         // PUT: api/WorkOrders/5
-        [HttpPut("AddDepartmentToWorkOrder/{id}")]
+        [HttpPut("AddDepartmentToWorkOrder/{id}"), Authorize]
         public async Task<IActionResult> AddDepartmentToWorkOrder([FromRoute] int id, [FromBody] WorkOrderDepartmentsDTO workOrderDepartmentsDTO)
         {
 
@@ -146,7 +166,7 @@ namespace InvoiceApp.Controllers
         }
 
         // POST: api/WorkOrders
-        [HttpPost("CreateWorkOrder")]
+        [HttpPost("CreateWorkOrder"), Authorize]
         public async Task<ActionResult<WorkOrderCreateDTO>> CreateWorkOrder([FromBody] WorkOrderCreateDTO workOrderDto)
         {
 
@@ -176,7 +196,7 @@ namespace InvoiceApp.Controllers
         }
 
         // DELETE: api/WorkOrders/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteWorkOrder([FromRoute] int id)
         {
             if (_context.WorkOrders == null)

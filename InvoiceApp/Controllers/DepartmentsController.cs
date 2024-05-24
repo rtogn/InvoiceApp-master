@@ -9,7 +9,9 @@ using InvoiceApp.Models;
 using InvoiceApp.DTO;
 using AutoMapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
+
 
 namespace InvoiceApp.Controllers
 {
@@ -42,7 +44,7 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/Departments
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartments()
         {
             if (_context.Departments == null)
@@ -57,7 +59,7 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/Departments/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<DepartmentDTO>> GetDepartment([FromRoute] int id)
         {
           if (_context.Departments == null)
@@ -77,7 +79,7 @@ namespace InvoiceApp.Controllers
 
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutDepartment([FromRoute] int id,[FromBody] DepartmentCreateDTO departmentDTO)
         {
             FluentValidation.Results.ValidationResult result = await _departmentCreateValidator.ValidateAsync(departmentDTO);
@@ -114,8 +116,8 @@ namespace InvoiceApp.Controllers
 
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO departmentDTO_in)
+        [HttpPost, Authorize]
+        public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO deparmentDTO_in)
         {
             FluentValidation.Results.ValidationResult result = await _departmentCreateValidator.ValidateAsync(departmentDTO_in);
             if (!result.IsValid) { return BadRequest("Invalid department submitted. Name must be more than 2 characters."); }
@@ -134,7 +136,7 @@ namespace InvoiceApp.Controllers
         }
 
         // DELETE: api/Departments/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteDepartment([FromRoute] int id)
         {
             if (_context.Departments == null)
