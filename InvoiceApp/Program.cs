@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using InvoiceApp.Validators;
+using FluentValidation;
 
 
 internal class Program
@@ -94,6 +96,7 @@ internal class Program
             builder.Services.AddSingleton<TokenManager>();
 
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
