@@ -2,14 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using InvoiceApp.Models;
 using InvoiceApp.DTO;
-using InvoiceApp.Validators;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
-using System.ComponentModel.DataAnnotations;
-
 
 namespace InvoiceApp.Controllers
 {
@@ -22,7 +17,11 @@ namespace InvoiceApp.Controllers
         private readonly IValidator<WorkOrderDepartmentsDTO> _workOrderDpeartmentsValidator;
         private readonly IValidator<WorkOrderCreateDTO> _workOrderCreateValidator;
         private readonly TokenManager _tokenService;
-        public WorkOrdersController(InvoiceContext context, IMapper mapper, IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator, IValidator<WorkOrderCreateDTO> workOrderCreateValidator, IValidator<WorkOrderDTO> workOrderValidator, TokenManager tokenService)
+        public WorkOrdersController(InvoiceContext context, 
+            IMapper mapper, 
+            IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator,
+            IValidator<WorkOrderCreateDTO> workOrderCreateValidator, 
+            TokenManager tokenService)
         {
             _context = context;
             _mapper = mapper;
@@ -62,7 +61,7 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/WorkOrders
-        [HttpGet, Authorize]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkOrderDTO>>> GetWorkOrders()
         {
             if (_context.WorkOrders == null)
