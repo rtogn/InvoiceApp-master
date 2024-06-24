@@ -24,6 +24,7 @@ namespace InvoiceApp
             var tokenHandler = new JwtSecurityTokenHandler();
             var keyBytes = Encoding.UTF8.GetBytes(_secretKey);
 
+            // Define claims used in body of JWT
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -32,6 +33,7 @@ namespace InvoiceApp
    
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
+                // Signing algorithm for the JWT (header)
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(keyBytes), 
                     SecurityAlgorithms.HmacSha256Signature)

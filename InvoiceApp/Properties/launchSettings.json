@@ -16,7 +16,8 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7083;http://localhost:5251",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        //"Logging__LogLevel__InvoiceApp.Controllers": "Debug"  // <-- Alternate specification of per-namespace logging. Prefer appsettings.json in this case. 
       }
     },
     "IIS Express": {

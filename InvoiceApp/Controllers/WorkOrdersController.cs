@@ -5,6 +5,10 @@ using InvoiceApp.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
+using NuGet.Protocol.Core.Types;
+using InvoiceApp.Exceptions;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace InvoiceApp.Controllers
 {
@@ -16,19 +20,27 @@ namespace InvoiceApp.Controllers
         private readonly IMapper _mapper;      
         private readonly IValidator<WorkOrderDepartmentsDTO> _workOrderDpeartmentsValidator;
         private readonly IValidator<WorkOrderCreateDTO> _workOrderCreateValidator;
+        private readonly ILogger<WorkOrdersController> _logger;
+        private readonly ILogger _factoryLogger;
         private readonly TokenManager _tokenService;
-        public WorkOrdersController(InvoiceContext context, 
+        public WorkOrdersController(
+            ILogger<WorkOrdersController> logger,
+            ILoggerFactory loggerFactory,
+            InvoiceContext context, 
             IMapper mapper, 
             IValidator<WorkOrderDepartmentsDTO> workOrderDpeartmentsValidator,
             IValidator<WorkOrderCreateDTO> workOrderCreateValidator, 
-            TokenManager tokenService)
-        {
-            _context = context;
-            _mapper = mapper;
-            _workOrderDpeartmentsValidator = workOrderDpeartmentsValidator;
-            _workOrderCreateValidator = workOrderCreateValidator;
-            _tokenService = tokenService;
-        }
+            TokenManager tokenService
+            )
+            {
+                _logger = logger;
+                _factoryLogger = loggerFactory.CreateLogger("ExampleAccessLayer");
+                _context = context;
+                _mapper = mapper;
+                _workOrderDpeartmentsValidator = workOrderDpeartmentsValidator;
+                _workOrderCreateValidator = workOrderCreateValidator;
+                _tokenService = tokenService;
+            }
 
         private WorkOrderDTO WorkOrderToDTO(WorkOrder workOrder)
         {
@@ -47,6 +59,11 @@ namespace InvoiceApp.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] User user)
         {
+            var timer = new Stopwatch();
+
+            _logger.LogDebug("(LW) Authentication by {user.UserName}", user.UserName);
+            timer.Start();
+
             // Hardcoded in place of server call
             string username_HC = "string";
             string password_HC = "string";
@@ -54,9 +71,11 @@ namespace InvoiceApp.Controllers
             if (user.UserName == username_HC && user.Password == password_HC)
             {
                 var token = _tokenService.Authenticate(user.UserName);
+                timer.Stop();
+                _factoryLogger.LogDebug("(F) Authentication for {user} finished in {ticks} ticks", user, timer.ElapsedTicks);
                 return Ok(new { Token = token });
             };
-
+            _logger.LogInformation("User {user.UserName} failed to authenticate", user.UserName);
             return Unauthorized();
         }
 
@@ -64,8 +83,10 @@ namespace InvoiceApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkOrderDTO>>> GetWorkOrders()
         {
+            _logger.LogInformation("Get All Work Orders method envoked.");
             if (_context.WorkOrders == null)
             {
+                _logger.LogWarning("WorkOrders table is null or empty. There should be information here");
                 return NotFound();
             }
 
@@ -78,19 +99,31 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/WorkOrders/5
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public async Task<ActionResult<WorkOrderDTO>> GetWorkOrder([FromRoute] int id)
         {
+            // Demo ID for testing exceptions
+            if (id == 511)
+            {
+                _logger.LogWarning("Description: 511 Demo log test" +
+                    "\nTest: Test" +
+                    "\nTest2: Test2");
+                //throw new CustomException("Test"); //Exception("Custom Exception text!!!");
+                return BadRequest();
+            }
             if (_context.WorkOrders == null)
             {
+                _logger.LogInformation("404 No found triggered");
                 return NotFound();
             }
+            _logger.LogDebug("Getting single WorkOrder in API for {id}", id);
             var workOrder = await _context.WorkOrders
                 .Include(w => w.Departments)
                 .FirstOrDefaultAsync(w => w.OrderId == id);
 
             if (workOrder == null)
             {
+                _logger.LogWarning("No Work Order found for ID: {id}", id);
                 return NotFound();
             }
 
@@ -110,6 +143,7 @@ namespace InvoiceApp.Controllers
             await _context.SaveChangesAsync();
 
             var workOrderDto = WorkOrderToDTO(workOrder);
+            _logger.LogInformation("Workorder with ID of {id} was completed at given time of {dateCompleted.ToString()}", id, dateCompleted.ToString());
             return Ok(workOrderDto);
         }
 
@@ -128,6 +162,7 @@ namespace InvoiceApp.Controllers
             }
             else
             {
+                _logger.LogDebug("Bad reuqest on CompelteWorkOrder() method with ID {id}", id);
                 return BadRequest("Work order has already been completed at time: " + workOrder.DateCompleted.ToString());
             }
 
@@ -141,7 +176,9 @@ namespace InvoiceApp.Controllers
         {
 
             FluentValidation.Results.ValidationResult result = await _workOrderDpeartmentsValidator.ValidateAsync(workOrderDepartmentsDTO);
-            if (!result.IsValid) { return BadRequest("Invalid Work Order Data submitted"); } 
+            if (!result.IsValid) {
+                _logger.LogWarning("Invalid wwork order DTO sumbitted")
+                return BadRequest("Invalid Work Order Data submitted"); } 
 
             if (!WorkOrderExists(id)) { return NotFound(); }
             
@@ -168,8 +205,6 @@ namespace InvoiceApp.Controllers
         [HttpPost("CreateWorkOrder"), Authorize]
         public async Task<ActionResult<WorkOrderCreateDTO>> CreateWorkOrder([FromBody] WorkOrderCreateDTO workOrderDto)
         {
-
-
             FluentValidation.Results.ValidationResult result = await _workOrderCreateValidator.ValidateAsync(workOrderDto);
             if (!result.IsValid) { return BadRequest("A work order must have at least one valid department"); }
 
@@ -210,7 +245,7 @@ namespace InvoiceApp.Controllers
 
             _context.WorkOrders.Remove(workOrder);
             await _context.SaveChangesAsync();
-
+            _logger.LogTrace("WorkOrder with ID {id} delted from database", id);s
             return NoContent();
         }
 
