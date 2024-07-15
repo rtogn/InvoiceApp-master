@@ -177,7 +177,7 @@ namespace InvoiceApp.Controllers
 
             FluentValidation.Results.ValidationResult result = await _workOrderDpeartmentsValidator.ValidateAsync(workOrderDepartmentsDTO);
             if (!result.IsValid) {
-                _logger.LogWarning("Invalid wwork order DTO sumbitted")
+                _logger.LogWarning("Invalid wwork order DTO sumbitted");
                 return BadRequest("Invalid Work Order Data submitted"); } 
 
             if (!WorkOrderExists(id)) { return NotFound(); }
@@ -245,7 +245,7 @@ namespace InvoiceApp.Controllers
 
             _context.WorkOrders.Remove(workOrder);
             await _context.SaveChangesAsync();
-            _logger.LogTrace("WorkOrder with ID {id} delted from database", id);s
+            _logger.LogTrace("WorkOrder with ID {id} delted from database", id);
             return NoContent();
         }
 

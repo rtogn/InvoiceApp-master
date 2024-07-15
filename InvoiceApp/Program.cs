@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Logging.EventLog;
+using Microsoft.Extensions.FileProviders;
 
 internal class Program
 {
@@ -175,25 +176,35 @@ internal class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
-            //app.UseDeveloperExceptionPage();
-
+        }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
         // Logging settings
         app.UseExceptionHandler();
-       //app.UseExceptionHandler();
-       //app.UseStatusCodePages();
 
-        //
         app.UseHttpsRedirection();
+
+        // Serve static files from the build directory of React App which in this case is InvoiceApp\frontend\build.
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(builder.Environment.ContentRootPath, "frontend", "build")),
+            RequestPath = ""
+        });
+
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-        
-        //app.UseHttpLogging();
-        //app.UseW3CLogging();
+        app.MapSwagger();
+        // If any unmatched routes are encounted ensure React handles routing and serves the index page. 
+        app.MapFallbackToFile("frontend/index.html");
         app.Run();
     }
 }
