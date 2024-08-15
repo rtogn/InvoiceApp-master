@@ -44,6 +44,7 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/Departments
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartments()
         {
@@ -116,7 +117,7 @@ namespace InvoiceApp.Controllers
 
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<ActionResult<DepartmentCreateDTO>> PostDepartment([FromBody] DepartmentCreateDTO departmentDTO_in)
         {
             FluentValidation.Results.ValidationResult result = await _departmentCreateValidator.ValidateAsync(departmentDTO_in);

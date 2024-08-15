@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceConsole", "InvoiceCo
 		{858BCF29-FB9C-4922-901D-27D08F15DC52} = {858BCF29-FB9C-4922-901D-27D08F15DC52}
 	EndProjectSection
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "invoicefe2", "invoicefe2\invoicefe2.esproj", "{C0D706D6-89C4-4750-90CB-95134385049B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,12 @@ Global
 		{D8DD3FB6-7BB5-4B3D-8F9B-2B3D5C067702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8DD3FB6-7BB5-4B3D-8F9B-2B3D5C067702}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8DD3FB6-7BB5-4B3D-8F9B-2B3D5C067702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0D706D6-89C4-4750-90CB-95134385049B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

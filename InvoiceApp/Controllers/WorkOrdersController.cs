@@ -56,28 +56,28 @@ namespace InvoiceApp.Controllers
             return workOrder;
         }
 
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] User user)
-        {
-            var timer = new Stopwatch();
+        //[HttpPost("Authenticate")]
+        //public IActionResult Authenticate([FromBody] User user)
+        //{
+        //    var timer = new Stopwatch();
 
-            _logger.LogDebug("(LW) Authentication by {user.UserName}", user.UserName);
-            timer.Start();
+        //    _logger.LogDebug("(LW) Authentication by {user.UserName}", user.UserName);
+        //    timer.Start();
 
-            // Hardcoded in place of server call
-            string username_HC = "string";
-            string password_HC = "string";
+        //    // Hardcoded in place of server call
+        //    string username_HC = "string";
+        //    string password_HC = "string";
 
-            if (user.UserName == username_HC && user.Password == password_HC)
-            {
-                var token = _tokenService.Authenticate(user.UserName);
-                timer.Stop();
-                _factoryLogger.LogDebug("(F) Authentication for {user} finished in {ticks} ticks", user, timer.ElapsedTicks);
-                return Ok(new { Token = token });
-            };
-            _logger.LogInformation("User {user.UserName} failed to authenticate", user.UserName);
-            return Unauthorized();
-        }
+        //    if (user.UserName == username_HC && user.Password == password_HC)
+        //    {
+        //        var token = _tokenService.Authenticate(user.UserName);
+        //        timer.Stop();
+        //        _factoryLogger.LogDebug("(F) Authentication for {user} finished in {ticks} ticks", user, timer.ElapsedTicks);
+        //        return Ok(new { Token = token });
+        //    };
+        //    _logger.LogInformation("User {user.UserName} failed to authenticate", user.UserName);
+        //    return Unauthorized();
+        //}
 
         // GET: api/WorkOrders
         [HttpGet]

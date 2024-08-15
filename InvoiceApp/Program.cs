@@ -10,12 +10,8 @@ using Microsoft.OpenApi.Models;
 using InvoiceApp.Validators;
 using FluentValidation;
 using InvoiceApp.DTO;
-//using Hellang.Middleware.ProblemDetails;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.Logging.EventLog;
-using Microsoft.Extensions.FileProviders;
+using InvoiceApp.Controllers;
 
 internal class Program
 {
@@ -42,7 +38,7 @@ internal class Program
                 var exception = ctx.HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
                 if (ctx.ProblemDetails.Status == 500)
                 {
-                    ctx.ProblemDetails.Detail = "This is my custom error detal message. ";
+                    ctx.ProblemDetails.Detail = "There was an internal server error, please contact the administrator. ";
                 }
             };
         });
@@ -99,8 +95,6 @@ internal class Program
         // Add services to the container.
         builder.Services.AddControllers()
           .AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-          // Disable Pcreation of Problem Details
-         // .ConfigureApiBehaviorOptions(opt => { opt.SuppressMapClientErrors = false; });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -173,6 +167,9 @@ internal class Program
 
         var app = builder.Build();
 
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -191,20 +188,20 @@ internal class Program
         app.UseHttpsRedirection();
 
         // Serve static files from the build directory of React App which in this case is InvoiceApp\frontend\build.
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(builder.Environment.ContentRootPath, "frontend", "build")),
-            RequestPath = ""
-        });
+        //app.UseStaticFiles(new StaticFileOptions
+        //{
+        //    FileProvider = new PhysicalFileProvider(
+        //        Path.Combine(builder.Environment.ContentRootPath, "frontend", "build")),
+        //    RequestPath = ""
+        //});
 
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-        app.MapSwagger();
+        app.MapFallbackToFile("/index.html");
         // If any unmatched routes are encounted ensure React handles routing and serves the index page. 
-        app.MapFallbackToFile("frontend/index.html");
+        //app.MapFallbackToFile("frontend/index.html");
         app.Run();
     }
 }
