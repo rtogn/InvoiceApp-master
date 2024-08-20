@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import LoginForm from './components/LoginForm';
+import DepartmentManager from './components/DepartmentManager';
 import './App.css';
 
 function App() {
@@ -26,13 +27,13 @@ function App() {
             <p>cats</p>
         </>);
     //authenticate();
-    postDepartment();
+    //postDepartment();
     return (
         <>
 
             <h1 id="tabelLabel">Weather forecast</h1>
             <p>This component demonstrates fetching data from the servertest.Test</p>
-            <div>{contents}</div>
+            <DepartmentManager /> 
             <LoginForm />
         </>
 
@@ -44,6 +45,7 @@ function App() {
 
     async function populateDepartmentData() {
         const response = await fetch('API/Departments', {
+            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${getToken()}`,
             },

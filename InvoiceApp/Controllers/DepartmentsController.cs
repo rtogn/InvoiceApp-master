@@ -11,6 +11,9 @@ using AutoMapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
+using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 
 
 namespace InvoiceApp.Controllers
