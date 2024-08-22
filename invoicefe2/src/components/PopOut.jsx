@@ -1,7 +1,7 @@
 import '../css/PopOut.css'
 
 function PopOut({show, onClose, children}) {
-    if (!show) { return null; }
+    if (!show) { return <></>; }
 
     return (
         <div className="popout-background">

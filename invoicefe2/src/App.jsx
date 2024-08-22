@@ -5,34 +5,12 @@ import DepartmentManager from './components/DepartmentManager';
 import './App.css';
 
 function App() {
-    const [departments, setDepartments] = useState();
 
-    useEffect(() => {
-        populateDepartmentData();
-    }, []);
-
-    const contents = departments === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : (<>
-            <table className="table table-striped" aria-labelledby="tabelLabel">
-                <tbody>
-                    {departments.map(departments =>
-                        <tr key={departments.id}>
-                            <td>{departments.name}</td>
-                            <td>{departments.shortCode}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-            <p>cats</p>
-        </>);
-    //authenticate();
-    //postDepartment();
     return (
         <>
 
-            <h1 id="tabelLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the servertest.Test</p>
+            <h1 id="tabelLabel">Work Order Demo</h1>
+            <p>This component demonstrates fetching data from the server.</p>
             <DepartmentManager /> 
             <LoginForm />
         </>

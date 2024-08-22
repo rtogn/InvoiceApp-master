@@ -8,14 +8,19 @@ function DepartmentManager() {
     useEffect(() => {
         populateDepartmentData();
     }, []);
-    //console.log(departments.headers);
 
-    //console.log(departments);
+    const handleUpdate = (updatedRow) => {
+        setDepartments((prevData) =>
+            prevData.map((row) =>
+                row.id === updatedRow.id ? updatedRow : row
+            )
+        )
+    }            ;
+
     return (
         <>
             <h1>Department Manager Temp</h1>
-            
-            <DataTable headers={['ID', 'Name', 'Short Code']} data={departments} /> 
+            <DataTable headers={['ID', 'Name', 'Short Code']} data={departments} putMethod={putDepartment} onUpdate={handleUpdate} /> 
         </>
 
     );
@@ -29,7 +34,6 @@ function DepartmentManager() {
         });
         const data = await response.json();
         const head = data.headers;
-        console.log(data);
         setDepartments(data);
     }
 
@@ -42,6 +46,23 @@ function DepartmentManager() {
             },
             body: JSON.stringify({ name: 'Naa', shortCode: 'Waa' })
         };
+    }
+
+    async function putDepartment(row) {
+        const id = row.id;
+        const name = row.name;
+        const shortCode = row.shortCode;
+        const update = { name, shortCode};
+
+        const response = await fetch(`API/Departments/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`,
+            },
+            body: JSON.stringify(update)
+        });
+        return response;
     }
 }
 

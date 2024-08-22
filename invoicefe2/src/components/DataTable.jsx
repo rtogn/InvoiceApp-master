@@ -1,20 +1,33 @@
 import React from 'react'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PopOut from './PopOut';
 //import edit from '../assets/edit.svg';
 
-function DataTable({ headers, data }) {
+function DataTable({ headers, data, onUpdate, putMethod }) {
     const [showPopOut, setShowPopOut] = useState(false);
     const [currentRow, setCurrentRow] = useState(null);
+
+    function handleFormChange(e) {
+        const { name, value } = e.target;
+        setCurrentRow((currentRow) => ({
+            ...currentRow,
+            [name]: value,
+        }));
+        //console.log(currentRow); 
+    }
 
     function handleEditClick(row) {
         setCurrentRow(row);
         setShowPopOut(true);
     };
-
-    function handleClosePopUp() {
+    function handleClosePopOut() {
         setShowPopOut(false);
         setCurrentRow(null);
+    };
+    function handleSavePopOut() {
+        onUpdate(currentRow);
+        putMethod(currentRow);
+        handleClosePopOut();
     };
 
     const contents = data === undefined
@@ -40,22 +53,21 @@ function DataTable({ headers, data }) {
                     ))}
                 </tbody>
             </table>
-            <PopOut show={showPopOut} onClose={handleClosePopUp}>
+            <PopOut show={showPopOut} onClose={handleClosePopOut}>
                 {currentRow && (
                     <div>
                         <h3>Edit Values</h3>
                         {Object.entries(currentRow).map(([key, value], index) => (
                             <div key={index}>
                                 <label>{key}: </label>
-                                <input type="text" defaultValue={value} />
+                                <input type="text" name={key} defaultValue={value} onChange={handleFormChange} />
                             </div>
                         ))}
-                        <button onClick={handleClosePopUp} title="Save Changes">Save</button>
+                        <button onClick={handleSavePopOut} title="Save Changes">Save</button>
                     </div>
                 )}
             </PopOut>
         </>);
-
     return (
         <>
             {contents}
