@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import DataTable from './DataTable';
 
-function DepartmentManager() {
+function DepartmentTable() {
     const [departments, setDepartments] = useState();
 
     useEffect(() => {
@@ -10,8 +10,8 @@ function DepartmentManager() {
     }, []);
 
     const handleUpdateEditRow = (updatedRow) => {
-        setDepartments((prevData) =>
-            prevData.map((row) =>
+        setDepartments((data) =>
+            data.map((row) =>
                 row.id === updatedRow.id ? updatedRow : row
             )
         );
@@ -99,7 +99,6 @@ function DepartmentManager() {
 
     async function deleteDepartment(row) {
         try {
-            console.log(row);
             const id = row.id;
 
             const response = await fetch(`API/Departments/${id}`, {
@@ -120,4 +119,4 @@ function getToken() {
 }
 
 
-export default DepartmentManager;
+export default DepartmentTable;

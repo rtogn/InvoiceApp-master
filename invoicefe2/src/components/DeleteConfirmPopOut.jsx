@@ -1,5 +1,5 @@
 import PopOut from './PopOut';
-function DeleteConfirm({ show, currentRow, confirmYes, confirmNo, onClose}) {
+function DeleteConfirm({ show, currentRow, confirmYes, onClose}) {
 
     return (
         <PopOut show={show} onClose={onClose}>

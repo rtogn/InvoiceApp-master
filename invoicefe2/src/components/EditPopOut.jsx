@@ -4,7 +4,8 @@ import DeleteConfirmPopOut from './DeleteConfirmPopOut';
 
 function EditPopOut({ show, currentRow, setCurrentRow, onSave, onClose, deleteMethod }) {
     const [showConfirmation, setShowConfirmation] = useState(false);
-    function handleFormChange(e) {
+
+    function handleEditFormChange(e) {
         const { name, value } = e.target;
         setCurrentRow((currentRow) => ({
             ...currentRow,
@@ -26,6 +27,12 @@ function EditPopOut({ show, currentRow, setCurrentRow, onSave, onClose, deleteMe
         setShowConfirmation(false);
     }
 
+    function disableIDinput(key, value) {
+        let disabled = ""
+        return (key === "id" ? <input type="text" name={key} defaultValue={value} onChange={handleEditFormChange} disabled />
+            : <input type="text" name={key} defaultValue={value} onChange={handleEditFormChange} />);
+    }
+
     return (
         <PopOut show={show} onClose={onClose}>
             {currentRow && (
@@ -34,7 +41,8 @@ function EditPopOut({ show, currentRow, setCurrentRow, onSave, onClose, deleteMe
                     {Object.entries(currentRow).map(([key, value], index) => (
                         <div key={index}>
                             <label>{key}: </label>
-                            <input type="text" name={key} defaultValue={value} onChange={handleFormChange} />
+                            {disableIDinput(key, value)}
+                            {/*<input type="text" name={key} defaultValue={value} onChange={handleEditFormChange} />*/}
                         </div>
                     ))}
                     <button onClick={onSave} id="popout-confirm-yes" title="Save Changes">Save</button>

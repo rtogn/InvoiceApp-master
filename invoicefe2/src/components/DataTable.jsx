@@ -25,7 +25,6 @@ function DataTable({ headers, data, onUpdate, putMethod, postMethod, deleteMetho
         // CLose method for all popouts. 
         setShowEditPopOut(false);
         setShowAddPopOut(false);
-        setShowConfirmation(false);
         setCurrentRow(null);
     };
 

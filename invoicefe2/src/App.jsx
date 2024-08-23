@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import LoginForm from './components/LoginForm';
-import DepartmentManager from './components/DepartmentManager';
+import DepartmentTable from './components/DepartmentTable';
 import './App.css';
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
 
             <h1 id="tabelLabel">Work Order Demo</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            <DepartmentManager /> 
+            <DepartmentTable /> 
             <LoginForm />
         </>
 
