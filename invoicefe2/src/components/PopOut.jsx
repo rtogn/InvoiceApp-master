@@ -6,7 +6,7 @@ function PopOut({show, onClose, children}) {
     return (
         <div className="popout-background">
             <div className="popout-body">
-                <button onClick={onClose} className="popout-close" title="Cancel">X</button>
+                <button onClick={onClose} id="add-button" className="popout-close" title="Cancel">X</button>
                 {children}
             </div>
         </div>

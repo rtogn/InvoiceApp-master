@@ -36,3 +36,59 @@
     cursor: pointer;
     color: black;
 }
+
+#table-button:hover {
+    background-color: darkslategray;
+}
+
+#table-row:hover {
+    background-color: lightslategray;
+}
+
+#add-button {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin: 0.5em;
+    margin-left: 5em;
+    text-align: center;
+    border-radius: 100%;
+    background-color: lightslategray;
+    color:white;
+}
+
+#add-button:hover {
+    background-color:darkslategray;
+    border-color: lightslategray;
+}
+
+#popout-delete {
+    color: white;
+    border-color: red;
+    background-color: red;
+    margin: 0.5em;
+    cursor: pointer;
+}
+
+#popout-delete-confirm-buttons {
+    display:grid;
+    grid-auto-flow:column;
+    grid-column-gap: 1em;
+}
+
+#popout-confirm-yes {
+    cursor: pointer;
+}
+
+#popout-confirm-yes:hover {
+    background-color: darkgreen;
+}
+
+#popout-confirm-no {
+    cursor: pointer;
+}
+
+#popout-confirm-no:hover {
+    background-color: darkred;
+}
