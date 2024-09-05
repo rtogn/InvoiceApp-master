@@ -6,7 +6,7 @@ import AddPopOut from './AddPopOut';
 import EditPopOut from './EditPopOut';
 //import edit from '../assets/edit.svg';
 
-function DataTable({ headers, data, onUpdate, putMethod, postMethod, deleteMethod }) {
+function DataTable({ headers, data, putMethod, postMethod, deleteMethod }) {
     const [showEditPopOut, setShowEditPopOut] = useState(false);
     const [showAddPopOut, setShowAddPopOut] = useState(false);
     const [newRow, setNewRow] = useState(null);
@@ -37,13 +37,11 @@ function DataTable({ headers, data, onUpdate, putMethod, postMethod, deleteMetho
     }
 
     function handleSaveAddPopOut() {
-        onUpdate(newRow);
         postMethod(newRow);
         handleClosePopOuts();
     };
 
     function handleSaveEditPopOut() {
-        onUpdate(currentRow);
         putMethod(currentRow);
         handleClosePopOuts();
     };

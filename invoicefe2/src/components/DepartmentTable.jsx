@@ -4,29 +4,14 @@ import DataTable from './DataTable';
 
 function DepartmentTable() {
     const [departments, setDepartments] = useState();
+    const [refreshTable, setRefreshTable] = useState(false);
 
     useEffect(() => {
         getDepartments();
-    }, []);
+    }, [refreshTable]);
 
-    const handleUpdateEditRow = (updatedRow) => {
-        setDepartments((data) =>
-            data.map((row) =>
-                row.id === updatedRow.id ? updatedRow : row
-            )
-        );
-    };
-
-    const handleUpdateNewRow = (newDepartment) => {
-        newDepartment = { 'id': 'Pending', ...newDepartment };
-        setDepartments((prevDepartments) => [...prevDepartments, newDepartment]);
-        //getDepartments();
-    };
-
-    const handleUpdate = (updatedRow) => {
-        //getDepartments();
-        const hasId = updatedRow?.id !== undefined;
-        hasId ? handleUpdateEditRow(updatedRow) : handleUpdateNewRow(updatedRow); 
+    const finalFormUpdateTable = () => {
+        setRefreshTable(!refreshTable);
     }
 
     return (
@@ -34,7 +19,6 @@ function DepartmentTable() {
             <h1>Department Manager Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 data={departments}
-                onUpdate={handleUpdate}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
                 deleteMethod={deleteDepartment}
@@ -56,7 +40,6 @@ function DepartmentTable() {
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }
-
     }
 
     async function postDepartment(newRow) {
@@ -69,8 +52,9 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(newRow)
             });
-
-            //console.log(response);
+            //const jsonresponse = await response.json();
+            finalFormUpdateTable();
+            //return jsonresponse //read response
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }
@@ -92,6 +76,7 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(update)
             });
+            finalFormUpdateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }
@@ -108,6 +93,8 @@ function DepartmentTable() {
                     'Authorization': `Bearer ${getToken()}`,
                 },
             });
+
+            finalFormUpdateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }
@@ -120,3 +107,51 @@ function getToken() {
 
 
 export default DepartmentTable;
+
+
+//const [curRow, setCurRow] = useState(null);
+//const handleUpdateNewRow = (newDepartment) => {
+//    newDepartment = { 'id': 'Pending', ...newDepartment };
+//    setDepartments((prevDepartments) => [...prevDepartments, newDepartment]);
+//};
+
+//const handleUpdate = (updatedRow) => {
+//    const hasId = updatedRow?.id !== undefined;
+//    //hasId ? handleUpdateEditRow(updatedRow) : handleUpdateNewRow(updatedRow);
+//    handleEditRow(updatedRow);
+//};
+
+//const updateTable = async () => {
+//    const newData = await postDepartment(curRow);
+//    handleAddNew(newData);
+//};
+
+//const handleAddNew = (newData) => {
+//    setDepartments((data) => [...data, newData]);
+//};
+
+//const handleEditRow = (updatedRow) => {
+//    setDepartments((data) =>
+//        data.map((row) =>
+//            row.id === updatedRow.id ? updatedRow : row
+//        )
+//    );
+//};
+
+//const handleDeleteRow = (removedRow) => {
+//    //something something filter
+//    setDepartments((data) =>
+//        data.filter(row => row.id != removedRow.id).map(
+//            filtered => (
+//                filtered
+//            )
+//        )
+//    );
+//    setRefreshTable(!refreshTable);
+//};
+
+//useEffect(() => {
+//    if (curRow != null) {
+//        updateTable();
+//    }
+//}, [curRow]);

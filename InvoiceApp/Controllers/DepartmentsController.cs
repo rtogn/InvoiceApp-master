@@ -14,6 +14,7 @@ using FluentValidation;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
+using NuGet.Versioning;
 
 
 namespace InvoiceApp.Controllers
@@ -71,6 +72,7 @@ namespace InvoiceApp.Controllers
               return NotFound();
           }
             var department = await _context.Departments.FindAsync(id);
+            //await _context.Departments.Where(i => i.Name == name && i.ShortCode == shortCode).ToListAsync();
 
             if (department == null)
             {
