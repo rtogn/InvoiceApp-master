@@ -27,6 +27,7 @@ function DepartmentTable() {
     );
 
     async function getDepartments() {
+        getDepartmentsPaged(1, 2);
         try {
             const response = await fetch('API/Departments', {
                 method: 'GET',
@@ -37,6 +38,23 @@ function DepartmentTable() {
             const data = await response.json();
             const head = data.headers;
             setDepartments(data);
+        } catch (exception) {
+            console.error('Issue fetching Departments list', exception);
+        }
+    }
+
+
+    async function getDepartmentsPaged(page, pageSize) {
+        try {
+            const response = await fetch(`API/Departments/Paged?page=${page}&pageSize=${pageSize}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`,
+                },
+            });
+            const data = await response.json();
+            //setDepartments(data);
+            console.log(data);
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }

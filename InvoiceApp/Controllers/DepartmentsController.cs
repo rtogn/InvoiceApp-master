@@ -48,8 +48,7 @@ namespace InvoiceApp.Controllers
         }
 
         // GET: api/Departments
-        [Authorize]
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartments()
         {
             if (_context.Departments == null)
@@ -61,6 +60,37 @@ namespace InvoiceApp.Controllers
             List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
 
             return Ok(DepartmentDTOs);
+        }
+
+        // GET: api/Departments?page=1&pageSize=10
+        //        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
+        [HttpGet("Paged/")]
+        public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartmentsPagnated(int page = 1, int pageSize = 10)
+        {
+            if (_context.Departments == null)
+            {
+                return NotFound();
+            }
+            var totalRecords = await _context.Departments.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            var departments = await _context.Departments
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
+
+            var response = new
+            {
+                Data = DepartmentDTOs,
+                Page = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = totalPages
+            };
+
+            return Ok(response);
         }
 
         // GET: api/Departments/5
