@@ -5,12 +5,14 @@ import DataTable from './DataTable';
 function DepartmentTable() {
     const [departments, setDepartments] = useState();
     const [refreshTable, setRefreshTable] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPageSize, setCurrentPageSize] = useState(4);
 
     useEffect(() => {
-        getDepartments();
+        getDepartmentsPaged(currentPage, currentPageSize);
     }, [refreshTable]);
 
-    const finalFormUpdateTable = () => {
+    const updateTable = () => {
         setRefreshTable(!refreshTable);
     }
 
@@ -18,7 +20,8 @@ function DepartmentTable() {
         <>
             <h1>Department Manager Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
-                data={departments}
+                payload={departments}
+                getMethod={getDepartmentsPaged}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
                 deleteMethod={deleteDepartment}
@@ -27,7 +30,6 @@ function DepartmentTable() {
     );
 
     async function getDepartments() {
-        getDepartmentsPaged(1, 2);
         try {
             const response = await fetch('API/Departments', {
                 method: 'GET',
@@ -36,13 +38,11 @@ function DepartmentTable() {
                 },
             });
             const data = await response.json();
-            const head = data.headers;
             setDepartments(data);
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }
     }
-
 
     async function getDepartmentsPaged(page, pageSize) {
         try {
@@ -52,9 +52,13 @@ function DepartmentTable() {
                     'Authorization': `Bearer ${getToken()}`,
                 },
             });
-            const data = await response.json();
-            //setDepartments(data);
-            console.log(data);
+            const responseJson = await response.json();
+            setDepartments(responseJson); ///was responeJson.data
+            setCurrentPage(page);
+            setCurrentPageSize(pageSize);
+
+            console.log("Response from dept controller:");
+            console.log(responseJson);
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }
@@ -71,7 +75,7 @@ function DepartmentTable() {
                 body: JSON.stringify(newRow)
             });
             //const jsonresponse = await response.json();
-            finalFormUpdateTable();
+            updateTable();
             //return jsonresponse //read response
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
@@ -94,7 +98,7 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(update)
             });
-            finalFormUpdateTable();
+            updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }
@@ -112,7 +116,7 @@ function DepartmentTable() {
                 },
             });
 
-            finalFormUpdateTable();
+            updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }

@@ -62,7 +62,7 @@ namespace InvoiceApp.Controllers
             return Ok(DepartmentDTOs);
         }
 
-        // GET: api/Departments?page=1&pageSize=10
+        // GET: api/Departments/Paged?page=1&pageSize=10
         //        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         [HttpGet("Paged/")]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetDepartmentsPagnated(int page = 1, int pageSize = 10)
