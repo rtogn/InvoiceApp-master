@@ -13,7 +13,7 @@ function EditPopOut({ show, currentRow, setCurrentRow, onSave, onClose, deleteMe
         }));
     }
 
-    function handleDeleteConfirmYes(row) {     
+    const handleDeleteConfirmYes = (row) => {     
         deleteMethod(row);
         handleCloseDeleteConfirmPopOuts();
         onClose();

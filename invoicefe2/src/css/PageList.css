@@ -13,3 +13,8 @@ button.final-page {
     background-color: slategrey;
     border-radius: 2px 15px 15px 2px;
 }
+
+button.first-page {
+    background-color: slategrey;
+    border-radius: 15px 2px 2px 15px;
+}

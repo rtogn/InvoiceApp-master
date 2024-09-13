@@ -93,6 +93,43 @@ namespace InvoiceApp.Controllers
             return Ok(response);
         }
 
+        // GET: api/Departments/Paged?page=1&pageSize=10
+        //        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
+        [HttpGet("Search/")]
+        public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetSearchDepartmentsPagnated(string searchTerm, int page = 1,  int pageSize = 10)
+        {
+            if (_context.Departments == null)
+            {
+                return NotFound();
+            }
+
+            
+            var departments = from d in _context.Departments
+                              select d;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                departments = departments.Where(d => d.Name.Contains(searchTerm) || d.ShortCode.Contains(searchTerm))
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize);
+            }
+            List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
+
+            var totalRecords = DepartmentDTOs.Count();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            var response = new
+            {
+                Data = DepartmentDTOs,
+                Page = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = totalPages
+            };
+
+            return Ok(response);
+        }
+
         // GET: api/Departments/5
         [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<DepartmentDTO>> GetDepartment([FromRoute] int id)
@@ -103,7 +140,7 @@ namespace InvoiceApp.Controllers
           }
             var department = await _context.Departments.FindAsync(id);
             //await _context.Departments.Where(i => i.Name == name && i.ShortCode == shortCode).ToListAsync();
-
+            //await _context.Departments.FindBestMatch(id);
             if (department == null)
             {
                 return NotFound();

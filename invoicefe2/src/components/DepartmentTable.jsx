@@ -21,6 +21,7 @@ function DepartmentTable() {
             <h1>Department Manager Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 payload={departments}
+                searchMethod={getSearchDepartments}
                 getMethod={getDepartmentsPaged}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
@@ -47,6 +48,26 @@ function DepartmentTable() {
     async function getDepartmentsPaged(page, pageSize) {
         try {
             const response = await fetch(`API/Departments/Paged?page=${page}&pageSize=${pageSize}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`,
+                },
+            });
+            const responseJson = await response.json();
+            setDepartments(responseJson); ///was responeJson.data
+            setCurrentPage(page);
+            setCurrentPageSize(pageSize);
+
+            //console.log("Response from dept controller:");
+            //console.log(responseJson);
+        } catch (exception) {
+            console.error('Issue fetching Departments list', exception);
+        }
+    }
+
+    async function getSearchDepartments(searchTerm, page, pageSize) {
+        try {
+            const response = await fetch(`API/Departments/Search?searchTerm=${searchTerm}page=${page}&pageSize=${pageSize}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`,
@@ -115,7 +136,9 @@ function DepartmentTable() {
                     'Authorization': `Bearer ${getToken()}`,
                 },
             });
-
+            if (departments.data.length === 1) {
+                setCurrentPage(currentPage - 1);
+            };
             updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);

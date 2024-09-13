@@ -1,13 +1,13 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import PopOut from './PopOut';
-import DeleteConfirmPopOut from './DeleteConfirmPopOut';
 import AddPopOut from './AddPopOut';
 import EditPopOut from './EditPopOut';
 import PageList from './PageList';
+import SearchTable from './SearchTable';
+import '../css/DataTable.css'
 //import edit from '../assets/edit.svg';
 
-function DataTable({ headers, payload, getMethod, putMethod, postMethod, deleteMethod }) {
+function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postMethod, deleteMethod }) {
     const data = payload?.data || [];
     const page = payload?.page || 0;
     const pageSize = payload?.pageSize || 0;
@@ -23,7 +23,6 @@ function DataTable({ headers, payload, getMethod, putMethod, postMethod, deleteM
     useEffect(() => {
         getMethod(currentPage, pageSize);
     }, [currentPage]);
-
 
     function handleEditClick(row) {
         setCurrentRow(row);
@@ -49,24 +48,31 @@ function DataTable({ headers, payload, getMethod, putMethod, postMethod, deleteM
         }));
     }
 
-    function handleSaveAddPopOut() {
+    const handleSaveAddPopOut = () => {
         postMethod(newRow);
+        // If page is about to overflow set to the newly added page. 
+        data.length === pageSize ? setCurrentPage(totalPages + 1):setCurrentPage(totalPages);
+        getMethod(currentPage, pageSize);
         handleClosePopOuts();
     };
 
     function handleSaveEditPopOut() {
         putMethod(currentRow);
-        handleClosePopOuts();
+
     };
 
     const contents = data === undefined
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
         : (<>
-            <button onClick={handleAddClick} id="add-button" name="AddButton" title="Add To Table" >+</button>
+            <div className="table-options">
+                <SearchTable searchMethod={searchMethod}></SearchTable>
+                <button onClick={handleAddClick} id="add-button" name="AddButton" title="Add To Table" >+</button>
+            </div>
             <AddPopOut show={showAddPopOut}
-                save={handleSaveAddPopOut}
-                onChange={handleAddFormChange}
-                onClose={handleClosePopOuts} />
+            save={handleSaveAddPopOut}
+            onChange={handleAddFormChange}
+            onClose={handleClosePopOuts} />
+
             <div>
                 <table className="table table-striped" aria-labelledby="tabelLabel">
                     <thead>
@@ -93,6 +99,7 @@ function DataTable({ headers, payload, getMethod, putMethod, postMethod, deleteM
             <EditPopOut show={showEditPopOut}
                 currentRow={currentRow}
                 setCurrentRow={setCurrentRow}
+                setCurrentPage={setCurrentPage}
                 onSave={handleSaveEditPopOut}
                 onClose={handleClosePopOuts}
                 deleteMethod={deleteMethod} />

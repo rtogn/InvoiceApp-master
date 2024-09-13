@@ -2,7 +2,9 @@ import { useState } from 'react';
 import '../css/PageList.css'
 import PageListButton from './PageListButton'
 
-const MAX_PAGE_DISPLAYED = 3;
+const MAX_PAGE_DISPLAYED = 4;
+let start = 1;
+let end = MAX_PAGE_DISPLAYED;
 
 function PageList({ curPage, setCurPage, totalPages }) {
 
@@ -16,22 +18,48 @@ function PageList({ curPage, setCurPage, totalPages }) {
     }
 
     const handleNumClick = (index) => {
+        jumpBounds(index);
         setCurPage(index);
-        //console.log("Break");
-        //console.log(curPage);
-        //console.log(index);
+    }
+
+    const jumpBounds = (page) => {
+        if (page != 1) {
+            start = page - 1;
+            end = Math.min(page + 2, totalPages);
+        } else {
+            start = 1;
+            end = Math.min(MAX_PAGE_DISPLAYED, totalPages);
+        }
+        
+    }
+
+    const setBounds = () => {
+        if (curPage === end && end != totalPages) {
+            start++;
+            end++;
+        }
+        else if (curPage === start && start != 1) {
+            start--;
+            end--;
+        }
     }
 
     const pageListButtons = () => {
-        let buttnList = [<PageListButton onClick={() => handleArrowClick("-")}>{"<<"}</PageListButton>];
 
-        // Generate page number buttons up to max value. 
-        // Current selection determined based on curPage state variable comapred to the index.
-        for (let i = 1; i <= totalPages; i++) {
+
+        let buttnList = [
+            <PageListButton onClick={() => handleNumClick(1)} selected="first-page">{'<<'}</PageListButton>,
+            <PageListButton onClick={() => handleArrowClick("-")}>{"<"}</PageListButton>
+        ];
+
+        setBounds();
+
+        for (let i = start; i <= end; i++) {
             buttnList.push(<PageListButton onClick={() => handleNumClick(i)} selected = { curPage === i ? "page-selected" : ""} >{i}</PageListButton>);
         }
-        buttnList.push(<PageListButton onClick={() => handleArrowClick("+")}>{">>"}</PageListButton>);
-        buttnList.push(<PageListButton selected="final-page">{totalPages}</PageListButton>)
+
+        buttnList.push(<PageListButton onClick={() => handleArrowClick("+")}>{">"}</PageListButton>);
+        buttnList.push(<PageListButton onClick={() => handleNumClick(totalPages) } selected="final-page">{'>>'}</PageListButton>)
         return buttnList;
     }
 
