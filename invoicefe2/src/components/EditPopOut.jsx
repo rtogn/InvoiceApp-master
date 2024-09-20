@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PopOut from './PopOut';
 import DeleteConfirmPopOut from './DeleteConfirmPopOut';
 
-function EditPopOut({ show, currentRow, setCurrentRow, onSave, onClose, deleteMethod }) {
+function EditPopOut({ show, currentRow, setCurrentRow, setCurrentPage, onSave, onClose, deleteMethod }) {
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     function handleEditFormChange(e) {

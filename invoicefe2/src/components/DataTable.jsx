@@ -50,9 +50,13 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
 
     const handleSaveAddPopOut = () => {
         postMethod(newRow);
-        // If page is about to overflow set to the newly added page. 
-        data.length === pageSize ? setCurrentPage(totalPages + 1):setCurrentPage(totalPages);
-        getMethod(currentPage, pageSize);
+        // If page is about to overflow set to the newly added page.
+        //data.length === pageSize ? setCurrentPage(totalPages + 1) : setCurrentPage(totalPages);
+        //console.log(data);
+        //console.log(pageSize);
+        getMethod(totalPages, pageSize);
+        setCurrentPage(totalPages);
+        
         handleClosePopOuts();
     };
 

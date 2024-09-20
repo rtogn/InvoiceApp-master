@@ -18,22 +18,34 @@ function PageList({ curPage, setCurPage, totalPages }) {
     }
 
     const handleNumClick = (index) => {
-        jumpBounds(index);
+        getPageListBounds(index);
         setCurPage(index);
     }
 
-    const jumpBounds = (page) => {
-        if (page != 1) {
-            start = page - 1;
-            end = Math.min(page + 2, totalPages);
-        } else {
+    const getPageListBounds = (page) => {
+        // Determines starting and ending page number to display when jumping between selected pages
+        if (totalPages <= MAX_PAGE_DISPLAYED) {
             start = 1;
-            end = Math.min(MAX_PAGE_DISPLAYED, totalPages);
+            end = totalPages;
+        } else {
+            if (page <= Math.ceil(MAX_PAGE_DISPLAYED / 2)) {
+                // Handle values between 1 and MAX_PAGE_DISPLAYED
+                start = 1;
+                end = MAX_PAGE_DISPLAYED;
+            } else if (page + Math.floor(MAX_PAGE_DISPLAYED / 2) >= totalPages) {
+                // Handle case when near end of list and more than 4 pages
+                start = totalPages - MAX_PAGE_DISPLAYED + 1;
+                end = totalPages
+            } else {
+                // Handle middle values / normal case
+                start = page - Math.floor(MAX_PAGE_DISPLAYED / 2);
+                end = page + Math.floor(MAX_PAGE_DISPLAYED / 2) - 1;
+            }
         }
-        
     }
 
     const setBounds = () => {
+        // 'Move' the view left or right as values are incremented
         if (curPage === end && end != totalPages) {
             start++;
             end++;
@@ -75,11 +87,3 @@ function PageList({ curPage, setCurPage, totalPages }) {
 };
 
 export default PageList;
-
-//<PageListButton>{"<<"}</PageListButton>
-//<PageListButton>{curPage}</PageListButton>
-//<PageListButton>{curPage + 1}</PageListButton>
-//<PageListButton>{curPage + 2}</PageListButton>
-//<PageListButton>{curPage + 3}</PageListButton>
-//<PageListButton>{">>"}</PageListButton>
-//<PageListButton>{totalPages}</PageListButton>

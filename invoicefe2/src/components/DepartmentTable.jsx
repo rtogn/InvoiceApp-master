@@ -95,9 +95,7 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(newRow)
             });
-            //const jsonresponse = await response.json();
             updateTable();
-            //return jsonresponse //read response
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }
