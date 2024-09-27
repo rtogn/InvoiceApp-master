@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import '../css/PageList.css'
 import PageListButton from './PageListButton'
 
@@ -6,7 +6,13 @@ const MAX_PAGE_DISPLAYED = 4;
 let start = 1;
 let end = MAX_PAGE_DISPLAYED;
 
-function PageList({ curPage, setCurPage, totalPages }) {
+function PageList({ curPage, setCurPage, totalPages, pageSize, setPageSize }) {
+
+    //This wasnt working...
+    //useEffect(() => {
+    //    setCurPage(1);
+    //    getPageListBounds(1);
+    //}, [pageSize]);
 
     const handleArrowClick = (direciton) => {
         //direciton === "+" ? setCurPage(curPage + 1) : setCurPage(curPage - 1);
@@ -21,6 +27,12 @@ function PageList({ curPage, setCurPage, totalPages }) {
         getPageListBounds(index);
         setCurPage(index);
     }
+
+
+    const handleDropDownChange = (e) => {
+        setPageSize(Number(e.target.value));
+    }
+
 
     const getPageListBounds = (page) => {
         // Determines starting and ending page number to display when jumping between selected pages
@@ -60,8 +72,8 @@ function PageList({ curPage, setCurPage, totalPages }) {
 
 
         let buttnList = [
-            <PageListButton onClick={() => handleNumClick(1)} selected="first-page">{'<<'}</PageListButton>,
-            <PageListButton onClick={() => handleArrowClick("-")}>{"<"}</PageListButton>
+            <PageListButton onClick={() => handleNumClick(1)} selected="first-page" title="First Page">{'<<'}</PageListButton>,
+            <PageListButton onClick={() => handleArrowClick("-")} title="Previous Page">{"<"}</PageListButton>
         ];
 
         setBounds();
@@ -70,17 +82,25 @@ function PageList({ curPage, setCurPage, totalPages }) {
             buttnList.push(<PageListButton onClick={() => handleNumClick(i)} selected = { curPage === i ? "page-selected" : ""} >{i}</PageListButton>);
         }
 
-        buttnList.push(<PageListButton onClick={() => handleArrowClick("+")}>{">"}</PageListButton>);
-        buttnList.push(<PageListButton onClick={() => handleNumClick(totalPages) } selected="final-page">{'>>'}</PageListButton>)
+        buttnList.push(<PageListButton onClick={() => handleArrowClick("+")} title="Next Page">{">"}</PageListButton>);
+        buttnList.push(<PageListButton onClick={() => handleNumClick(totalPages)} selected="final-page" title="Last Page">{'>>'}</PageListButton>)
         return buttnList;
     }
-
+    //value="5" onChange={e => setPageSize(e.target.value)}
     return (
         <nav className="">
             
             <ul className="no-bullets">
-                {...pageListButtons() }     
+                {...pageListButtons()}   
+
+                <select className="drop-down" value={pageSize} onChange={handleDropDownChange} title="Number per page"> 
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
             </ul>
+
 
         </nav>
     );

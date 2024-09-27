@@ -18,3 +18,15 @@ button.first-page {
     background-color: slategrey;
     border-radius: 15px 2px 2px 15px;
 }
+
+.drop-down {
+    border-radius: 8px;
+
+    padding: 0.1em .5em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}

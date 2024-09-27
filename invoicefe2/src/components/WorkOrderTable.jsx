@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import DataTable from './DataTable';
 import SearchTable from './SearchTable';
 
-function DepartmentTable() {
+function WorkOrderTable() {
     const [departments, setDepartments] = useState();
     const [refreshTable, setRefreshTable] = useState(false);
     const [searchTableOn, setSearchTableOn] = useState(false);
@@ -25,7 +25,7 @@ function DepartmentTable() {
 
     return (
         <>
-            <h1>Department Manager Temp</h1>
+            <h1>Work Order Table Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 payload={departments}
                 searchMethod={getSearchDepartments}
@@ -161,52 +161,4 @@ function getToken() {
 }
 
 
-export default DepartmentTable;
-
-
-//const [curRow, setCurRow] = useState(null);
-//const handleUpdateNewRow = (newDepartment) => {
-//    newDepartment = { 'id': 'Pending', ...newDepartment };
-//    setDepartments((prevDepartments) => [...prevDepartments, newDepartment]);
-//};
-
-//const handleUpdate = (updatedRow) => {
-//    const hasId = updatedRow?.id !== undefined;
-//    //hasId ? handleUpdateEditRow(updatedRow) : handleUpdateNewRow(updatedRow);
-//    handleEditRow(updatedRow);
-//};
-
-//const updateTable = async () => {
-//    const newData = await postDepartment(curRow);
-//    handleAddNew(newData);
-//};
-
-//const handleAddNew = (newData) => {
-//    setDepartments((data) => [...data, newData]);
-//};
-
-//const handleEditRow = (updatedRow) => {
-//    setDepartments((data) =>
-//        data.map((row) =>
-//            row.id === updatedRow.id ? updatedRow : row
-//        )
-//    );
-//};
-
-//const handleDeleteRow = (removedRow) => {
-//    //something something filter
-//    setDepartments((data) =>
-//        data.filter(row => row.id != removedRow.id).map(
-//            filtered => (
-//                filtered
-//            )
-//        )
-//    );
-//    setRefreshTable(!refreshTable);
-//};
-
-//useEffect(() => {
-//    if (curRow != null) {
-//        updateTable();
-//    }
-//}, [curRow]);
+export default WorkOrderTable;

@@ -9,16 +9,25 @@ import '../css/DataTable.css'
 
 function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postMethod, deleteMethod }) {
     const data = payload?.data || [];
-    const page = payload?.page || 0;
-    const pageSize = payload?.pageSize || 0;
+    const page = payload?.page || 1;
+    const pageSize = payload?.pageSize || 5;
     const totalRecords = payload?.totalRecords || 0;
     const totalPages = payload?.totalPages || 0;
+
+
+    const [pageSizeTemp, setPagesizeTemp] = useState(pageSize);
 
     const [showEditPopOut, setShowEditPopOut] = useState(false);
     const [showAddPopOut, setShowAddPopOut] = useState(false);
     const [newRow, setNewRow] = useState(null);
     const [currentRow, setCurrentRow] = useState(null);
     const [currentPage, setCurrentPage] = useState(page);
+    
+    useEffect(() => {
+        console.log(pageSizeTemp);
+        getMethod(currentPage, pageSizeTemp);
+
+    }, [pageSizeTemp]);
 
     useEffect(() => {
         getMethod(currentPage, pageSize);
@@ -98,7 +107,7 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
                         ))}
                     </tbody>
                 </table>
-                <PageList curPage={currentPage} setCurPage={setCurrentPage} totalPages={totalPages} />
+                <PageList curPage={currentPage} setCurPage={setCurrentPage} totalPages={totalPages} pageSize={pageSizeTemp} setPageSize={setPagesizeTemp} />
             </div>
             <EditPopOut show={showEditPopOut}
                 currentRow={currentRow}

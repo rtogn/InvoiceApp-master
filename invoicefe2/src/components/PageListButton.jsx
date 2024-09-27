@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import '../css/PageList.css'
 
-function PageListButton({ selected, onClick, children }) {
+function PageListButton({ selected, onClick, title, children }) {
 
     return (
         <li>
-            <button className={selected} onClick={onClick}> {children} </button>
+            <button className={selected} onClick={onClick} title={title}> {children} </button>
         </li>
     );
 };
