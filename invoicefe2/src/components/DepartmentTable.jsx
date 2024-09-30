@@ -11,16 +11,20 @@ function DepartmentTable() {
     const [currentPageSize, setCurrentPageSize] = useState(5);
 
     useEffect(() => {
-        if (searchTableOn) {
-            console.log("peep1");
-            getDepartmentsPaged(currentPage, currentPageSize);
-        } else {
-            setCurrentPage(1);
-        }
+        getDepartmentsPaged(currentPage, currentPageSize);
     }, [refreshTable]);
 
     const updateTable = () => {
         setRefreshTable(!refreshTable);
+        
+    }
+
+    const testSearch = (term) => {
+        if (term != '') {
+            getSearchDepartments(term, 1, currentPageSize);
+        } else {
+            updateTable();
+        }
     }
 
     return (
@@ -28,7 +32,7 @@ function DepartmentTable() {
             <h1>Department Manager Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 payload={departments}
-                searchMethod={getSearchDepartments}
+                searchMethod={testSearch}
                 getMethod={getDepartmentsPaged}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
@@ -64,7 +68,6 @@ function DepartmentTable() {
             setDepartments(responseJson); ///was responeJson.data
             setCurrentPage(page);
             setCurrentPageSize(pageSize);
-
             //console.log("Response from dept controller:");
             //console.log(responseJson);
         } catch (exception) {
@@ -75,19 +78,18 @@ function DepartmentTable() {
     async function getSearchDepartments(searchTerm, page, pageSize) {
         try {
 
-            const response = await fetch(`API/Departments/Search?searchTerm=${searchTerm}page=${page}&pageSize=${pageSize}`, {
+            const response = await fetch(`API/Departments/Search?searchTerm=${searchTerm}&page=${page}&pageSize=${pageSize}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${getToken()}`,
                 },
                 
             });
-            console.log("aaaResponse from dept controller:");
-            console.log("aResponse from dept controller:");
             const responseJson = await response.json();
+            setCurrentPage(1);
+            setCurrentPageSize(pageSize);
             setDepartments(responseJson); ///was responeJson.data
-            //setCurrentPage(page);
-            //setCurrentPageSize(pageSize);
+
             //setSearchTableOn(true);
             //updateTable();
             console.log("Response from dept controller:");
@@ -116,6 +118,8 @@ function DepartmentTable() {
 
     async function putDepartment(row) {
         try {
+            console.log('abc');
+
             const id = row.id;
             const name = row.name;
             const shortCode = row.shortCode;
@@ -129,6 +133,7 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(update)
             });
+            console.log('abc');
             updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);

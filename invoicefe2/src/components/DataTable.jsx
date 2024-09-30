@@ -24,9 +24,8 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
     const [currentPage, setCurrentPage] = useState(page);
     
     useEffect(() => {
-        console.log(pageSizeTemp);
+        console.log('dignus');
         getMethod(currentPage, pageSizeTemp);
-
     }, [pageSizeTemp]);
 
     useEffect(() => {
@@ -71,7 +70,7 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
 
     function handleSaveEditPopOut() {
         putMethod(currentRow);
-
+        handleClosePopOuts();
     };
 
     const contents = data === undefined
@@ -102,12 +101,18 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
                                 {Object.values(row).map((cell, cellIndex)=> (
                                 <td key={cellIndex}>{cell}</td>
                                 ))}
-                                <td><button onClick={() => handleEditClick(row)} id="table-button" title="Edit Row">Edit</button></td>
+                                <td><button onClick={() => handleEditClick(row)}
+                                    id="table-button"
+                                    title="Edit Row">Edit</button></td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                <PageList curPage={currentPage} setCurPage={setCurrentPage} totalPages={totalPages} pageSize={pageSizeTemp} setPageSize={setPagesizeTemp} />
+                <PageList curPage={currentPage}
+                    setCurPage={setCurrentPage}
+                    totalPages={totalPages}
+                    pageSize={pageSizeTemp}
+                    setPageSize={setPagesizeTemp} />
             </div>
             <EditPopOut show={showEditPopOut}
                 currentRow={currentRow}

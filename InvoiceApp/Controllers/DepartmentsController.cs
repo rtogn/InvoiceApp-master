@@ -96,27 +96,34 @@ namespace InvoiceApp.Controllers
         // GET: api/Departments/Paged?page=1&pageSize=10
         //        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         [HttpGet("Search/")]
-        public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetSearchDepartmentsPagnated(string searchTerm, int page = 1,  int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetSearchDepartmentsPagnated(
+            string searchTerm, 
+            int page = 1,  
+            int pageSize = 10)
         {
             if (_context.Departments == null)
             {
                 return NotFound();
             }
-
             
+            // Retrieve all records from _context for Departments
             var departments = from d in _context.Departments
                               select d;
+            
 
+            // Filter down those results based on search term
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 departments = departments.Where(d => d.Name.Contains(searchTerm) || d.ShortCode.Contains(searchTerm))
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize);
+                    ;
             }
-            List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
-
-            var totalRecords = DepartmentDTOs.Count();
+            var totalRecords = departments.Count();
             var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            departments = departments
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+            List <Department> DepartmentLists = await departments.ToListAsync();
+            List<DepartmentDTO> DepartmentDTOs = _mapper.Map<List<DepartmentDTO>>(departments);
 
             var response = new
             {
