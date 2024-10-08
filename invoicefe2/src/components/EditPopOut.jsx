@@ -43,7 +43,6 @@ function EditPopOut({ show, currentRow, setCurrentRow, setCurrentPage, onSave, o
                         <div key={index}>
                             <label>{key}: </label>
                             {disableIDinput(key, value)}
-                            {/*<input type="text" name={key} defaultValue={value} onChange={handleEditFormChange} />*/}
                         </div>
                     ))}
                     <button onClick={onSave} id="popout-confirm-yes" title="Save Changes">Save</button>

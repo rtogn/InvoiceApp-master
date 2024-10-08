@@ -114,7 +114,7 @@ namespace InvoiceApp.Controllers
             // Filter down those results based on search term
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                departments = departments.Where(d => d.Name.Contains(searchTerm) || d.ShortCode.Contains(searchTerm))
+                departments = departments.Where(d => d.Id.ToString().Equals(searchTerm) || d.Name.Contains(searchTerm) || d.ShortCode.Contains(searchTerm))
                     ;
             }
             var totalRecords = departments.Count();

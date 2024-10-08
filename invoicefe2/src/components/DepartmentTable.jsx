@@ -11,8 +11,10 @@ function DepartmentTable() {
     const [currentPageSize, setCurrentPageSize] = useState(5);
 
     useEffect(() => {
-        getDepartmentsPaged(currentPage, currentPageSize);
-    }, [refreshTable]);
+        if (!searchTableOn) {
+            getDepartmentsPaged(currentPage, currentPageSize);
+        }
+    }, [refreshTable, searchTableOn]);
 
     const updateTable = () => {
         setRefreshTable(!refreshTable);
@@ -22,8 +24,18 @@ function DepartmentTable() {
     const testSearch = (term) => {
         if (term != '') {
             getSearchDepartments(term, 1, currentPageSize);
+            setSearchTableOn(true);
         } else {
+            setSearchTableOn(false);
             updateTable();
+        }
+    }
+
+    const getOrSearch = (searchTerm='', page, currentPageSize) => {
+        if (searchTerm === '' || searchTerm === null) {
+            getDepartmentsPaged(page, currentPageSize);
+        } else {
+            getSearchDepartments(searchTerm, page, currentPageSize);
         }
     }
 
@@ -36,6 +48,7 @@ function DepartmentTable() {
                 getMethod={getDepartmentsPaged}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
+                getSearchMethod={getOrSearch}
                 deleteMethod={deleteDepartment}
             /> 
         </>
@@ -76,6 +89,7 @@ function DepartmentTable() {
     }
 
     async function getSearchDepartments(searchTerm, page, pageSize) {
+        //console.log(searchTerm);
         try {
 
             const response = await fetch(`API/Departments/Search?searchTerm=${searchTerm}&page=${page}&pageSize=${pageSize}`, {
@@ -86,14 +100,15 @@ function DepartmentTable() {
                 
             });
             const responseJson = await response.json();
-            setCurrentPage(1);
+            setDepartments(responseJson);
+            setCurrentPage(page);
             setCurrentPageSize(pageSize);
-            setDepartments(responseJson); ///was responeJson.data
+ ///was responeJson.data
 
             //setSearchTableOn(true);
             //updateTable();
-            console.log("Response from dept controller:");
-            console.log(responseJson);
+            //console.log("Response from dept controller:");
+            //console.log(responseJson);
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }
@@ -109,7 +124,7 @@ function DepartmentTable() {
                 },
                 body: JSON.stringify(newRow)
             });
-            updateTable();
+            //updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
         }

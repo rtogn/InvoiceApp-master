@@ -9,11 +9,19 @@ function SearchTable({ searchMethod }) {
         searchMethod(searchTerm);
     }
 
+    const clear = () => {
+        setSearchTerm('');
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
+        <>
+        <form onSubmit={handleSubmit} onChange={handleSubmit}>
             <input type='text' value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder='Search' />
             <button className='submit-button' type='submit'>Search</button>
+                <button onClick={clear} className='submit-button' type='submit'>Clear</button>
         </form>
+        
+        </>
     );
 };
 

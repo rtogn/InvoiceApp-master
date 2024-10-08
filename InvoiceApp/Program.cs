@@ -29,7 +29,6 @@ internal class Program
         });
         
 
-        
         // Use built in ASP.net ProblemDetails with a custom exception
         builder.Services.AddProblemDetails(opt =>
         {

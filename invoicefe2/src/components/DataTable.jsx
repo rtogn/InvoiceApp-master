@@ -7,7 +7,7 @@ import SearchTable from './SearchTable';
 import '../css/DataTable.css'
 //import edit from '../assets/edit.svg';
 
-function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postMethod, deleteMethod }) {
+function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postMethod, getSearchMethod, deleteMethod }) {
     const data = payload?.data || [];
     const page = payload?.page || 1;
     const pageSize = payload?.pageSize || 5;
@@ -22,15 +22,18 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
     const [newRow, setNewRow] = useState(null);
     const [currentRow, setCurrentRow] = useState(null);
     const [currentPage, setCurrentPage] = useState(page);
-    
+    const [searchTerm, setSearchTerm] = useState('');
+
+
     useEffect(() => {
-        console.log('dignus');
-        getMethod(currentPage, pageSizeTemp);
+        //getMethod(currentPage, pageSizeTemp);
+        getSearchMethod(searchTerm, currentPage, pageSizeTemp);
     }, [pageSizeTemp]);
 
     useEffect(() => {
-        getMethod(currentPage, pageSize);
-    }, [currentPage]);
+        //getMethod(currentPage, pageSize);
+        getSearchMethod(searchTerm, currentPage, pageSize);
+    }, [currentPage, searchTerm]);
 
     function handleEditClick(row) {
         setCurrentRow(row);
@@ -46,6 +49,7 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
         setShowEditPopOut(false);
         setShowAddPopOut(false);
         setCurrentRow(null);
+
     };
 
     function handleAddFormChange(e) {
@@ -60,11 +64,10 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
         postMethod(newRow);
         // If page is about to overflow set to the newly added page.
         //data.length === pageSize ? setCurrentPage(totalPages + 1) : setCurrentPage(totalPages);
-        //console.log(data);
-        //console.log(pageSize);
-        getMethod(totalPages, pageSize);
-        setCurrentPage(totalPages);
-        
+        setCurrentPage(1);
+        setSearchTerm(newRow.name);
+        //getMethod(totalPages, pageSize);
+        //setCurrentPage(totalPages);
         handleClosePopOuts();
     };
 
@@ -77,7 +80,7 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
         : (<>
             <div className="table-options">
-                <SearchTable searchMethod={searchMethod}></SearchTable>
+                <SearchTable searchMethod={setSearchTerm}></SearchTable>
                 <button onClick={handleAddClick} id="add-button" name="AddButton" title="Add To Table" >+</button>
             </div>
             <AddPopOut show={showAddPopOut}
@@ -126,7 +129,6 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
         <>
             {contents}
         </>
-    
     );
 }
 
