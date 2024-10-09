@@ -11,19 +11,17 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
     const data = payload?.data || [];
     const page = payload?.page || 1;
     const pageSize = payload?.pageSize || 5;
-    const totalRecords = payload?.totalRecords || 0;
+    //const totalRecords = payload?.totalRecords || 0;
     const totalPages = payload?.totalPages || 0;
 
 
     const [pageSizeTemp, setPagesizeTemp] = useState(pageSize);
-
     const [showEditPopOut, setShowEditPopOut] = useState(false);
     const [showAddPopOut, setShowAddPopOut] = useState(false);
     const [newRow, setNewRow] = useState(null);
     const [currentRow, setCurrentRow] = useState(null);
     const [currentPage, setCurrentPage] = useState(page);
     const [searchTerm, setSearchTerm] = useState('');
-
 
     useEffect(() => {
         //getMethod(currentPage, pageSizeTemp);
@@ -49,7 +47,6 @@ function DataTable({ headers, payload, getMethod, searchMethod, putMethod, postM
         setShowEditPopOut(false);
         setShowAddPopOut(false);
         setCurrentRow(null);
-
     };
 
     function handleAddFormChange(e) {

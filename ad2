@@ -1,0 +1,201 @@
+[33mcommit 305e7762a48c88560b893497a4d2493f52ba18c1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mAdding-React-Frontend[m[33m, [m[1;31morigin/Adding-React-Frontend[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Sun Sep 29 22:15:01 2024 -0400
+
+    Search hooked up to table. Fixed refreshing of number of pages on change in total pages. Fixed bug with saving edits updating the table
+
+[33mcommit 751eb1d1e9fa1de32f2f261609045f2334a61489[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Sep 27 17:50:05 2024 -0400
+
+    Addid navigation functionality after login to other pages, a menu page, and the skeleton of the WorkOrderTable
+
+[33mcommit b01c51e5895ec3541d735405c2cfa7a7010908c6[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Sep 20 15:06:39 2024 -0400
+
+    Updated page list bound function to complete funcitonality of PageList
+
+[33mcommit 9f4d0894d506331b240da8f6fd4c30d73338a3b9[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Sep 13 17:05:14 2024 -0400
+
+    Basic functionality of page nav bar complete, still has some issues with jumping to final page that need to be fixed
+
+[33mcommit 00463d1f27d22932f619fafdc6d26c86dbb9c6d9[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Wed Sep 11 15:12:31 2024 -0400
+
+    Fixed delete confirmation box bug causing it to be open when editing the next entry
+
+[33mcommit a8a19bf716b419385234259264acb02ee292eb68[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Tue Sep 10 17:01:50 2024 -0400
+
+    Added page navigation buttons. Still needs some work, but basic functionality works
+
+[33mcommit a1f31602f9d632ca37b383f503c2e65163c2f307[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Sep 5 16:49:25 2024 -0400
+
+    Added Paged methods for getting departments in frontend and backend
+
+[33mcommit 96c3b70e21619f43d2a01332e2a305ef99472ba6[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Sep 5 15:21:36 2024 -0400
+
+    Refined update methods for Put, post and Delete to call a single update handle to refresh the table instead of individual implementations
+
+[33mcommit 73b096effc705ad164472ff7842132a2b910e2ad[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Aug 23 17:05:49 2024 -0400
+
+    Added function to disable editing of IDs which caused unintended behavior. Name change from DepartmentManager -> DepartmentTable
+
+[33mcommit bde3c0af7e981de30aa9cf8990caf22a6ffbeb65[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Aug 23 15:42:27 2024 -0400
+
+    Refactoring ofr DataTable methods. Extracted Edit, Add and Delete popouts to individual components. Moved Delete logic to Edit popout
+
+[33mcommit 3a24033218f8f37be4ae59478e88c158502ac403[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri Aug 23 12:30:53 2024 -0400
+
+    Implemented Delete functionality for DataTable including a confirmation popup. Additional CSS updates for table rows and buttons
+
+[33mcommit f9643caa0497c6390274fb0f9f49e16feb9f4ebf[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Aug 22 16:04:08 2024 -0400
+
+    Completed functionality to update DataTable rows using the Edit PopUp. Data will be saved to DB and display on the page when submitted
+
+[33mcommit e65a28128842de4875068965301670b0769f04d5[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Tue Aug 20 13:42:07 2024 -0400
+
+    Added PopOut.jsx and implemented into DataTable to display row with text edit fields on click of edit button per each row
+
+[33mcommit 4a3563aff1ac5b0d5b2ebe0ab3934d78667b5380[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Tue Aug 20 12:36:36 2024 -0400
+
+    Base functionality of DataTable added. Updated DepartmentManager to send Dept info to DataTable and display it
+
+[33mcommit 4f17e4e424e69ad0a71f54917d5f274d92777d31[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Aug 15 11:03:45 2024 -0400
+
+    Separated Auth Controller and some other React starting work
+
+[33mcommit c20e56165012b37f945fd0e56387d804b04e6c02[m[33m ([m[1;32mAdding-and-learning--ASP.NET-Logging[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Mon Jul 15 16:16:14 2024 -0400
+
+    React base
+
+[33mcommit c2ff920923c09eb4cae4228626d637396b1c7396[m[33m ([m[1;31morigin/Adding-and-learning--ASP.NET-Logging[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Mon Jun 24 16:21:44 2024 -0400
+
+    Logging Commit 1
+
+[33mcommit 3b847175a339ba562afe838b24f6a770d587b8ef[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Tue May 28 15:34:30 2024 -0400
+
+    Fix to Fluid Validation caused by merge
+
+[33mcommit 70f12c51ccba6b4245203a87bbd9946c3d45be8b[m
+Merge: 7f14e93 73e56f7
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Fri May 24 17:14:05 2024 -0400
+
+    Merge pull request #3 from rtogn/AddJWTAuth
+    
+    Adding JWT Authorization
+
+[33mcommit 73e56f744970314108490db0c06d7752373c6f12[m[33m ([m[1;31morigin/AddJWTAuth[m[33m)[m
+Merge: 064b0d6 7f14e93
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Fri May 24 17:13:44 2024 -0400
+
+    Merge branch 'master' into AddJWTAuth
+
+[33mcommit 064b0d62ee442f399ff1f8a7ab2477a34ff9968c[m[33m ([m[1;32mAddJWTAuth[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Fri May 24 17:00:03 2024 -0400
+
+    Adding JWT Authorization
+
+[33mcommit 7f14e932b2907b067f66b7da6d67a86b48530259[m
+Merge: 39fa9e3 1ca618d
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Thu Apr 25 15:38:23 2024 -0400
+
+    Merge pull request #2 from rtogn/AddFluentValidation
+    
+    Add fluent validation
+
+[33mcommit 1ca618d74bb68e92cec959f599185148480f4f2d[m[33m ([m[1;31morigin/AddFluentValidation[m[33m, [m[1;32mAddFluentValidation[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Apr 25 15:36:59 2024 -0400
+
+    Minor fix to README.md
+
+[33mcommit f05c34189b608a028998a9b66930af0f51a9733d[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Apr 25 15:34:52 2024 -0400
+
+    Updated README.md to list recent additions
+
+[33mcommit ecd749db8ad5409a061fbdd04af541f5dbc5a781[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Thu Apr 25 15:28:14 2024 -0400
+
+    Adding Fluent Validation to controllers
+
+[33mcommit 39fa9e32da0136289ce7090c2404c8b8bf039ec5[m
+Merge: 507180d cf48b42
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Mon Apr 15 15:07:15 2024 -0400
+
+    Merge pull request #1 from rtogn/AutoMapper
+    
+    A few fixes
+
+[33mcommit cf48b4263492835f94eb7e99dad0db1e85134a40[m[33m ([m[1;31morigin/AutoMapper[m[33m, [m[1;32mAutoMapper[m[33m)[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Mon Apr 15 15:03:16 2024 -0400
+
+    A few fixes
+
+[33mcommit 507180dd07d2fffe2d7b46af4f4e444528f45f83[m
+Author: Robert Tognoni <Robert.Tognoni@biobridgeglobal.org>
+Date:   Mon Apr 15 14:27:27 2024 -0400
+
+    Initial commit
+
+[33mcommit cc451f53f42cedad27370bad8da0b55bbaa2265f[m
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Thu Apr 4 16:29:21 2024 -0400
+
+    Update README.md
+
+[33mcommit 60bef9b67775693246817a0fe9be849c4cd64d05[m
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Thu Apr 4 16:27:56 2024 -0400
+
+    Update README.md
+
+[33mcommit 2e2b5deab90f2e37824c0b0d2ffdbf8c6aa3a03b[m
+Author: Rob Tognoni <60898339+rtogn@users.noreply.github.com>
+Date:   Thu Apr 4 16:26:20 2024 -0400
+
+    Update README.md
+
+[33mcommit f647fd6f1d2a72e2e2963b11238b55d26c6da90f[m
+Author: togrob1 <togrob1@ATLITS10994>
+Date:   Thu Apr 4 16:12:11 2024 -0400
+
+    Add project files.

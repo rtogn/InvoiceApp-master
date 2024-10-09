@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import DataTable from './DataTable';
-import SearchTable from './SearchTable';
 
 function DepartmentTable() {
     const [departments, setDepartments] = useState();
@@ -11,6 +10,7 @@ function DepartmentTable() {
     const [currentPageSize, setCurrentPageSize] = useState(5);
 
     useEffect(() => {
+
         if (!searchTableOn) {
             getDepartmentsPaged(currentPage, currentPageSize);
         }
@@ -18,20 +18,10 @@ function DepartmentTable() {
 
     const updateTable = () => {
         setRefreshTable(!refreshTable);
-        
     }
 
-    const testSearch = (term) => {
-        if (term != '') {
-            getSearchDepartments(term, 1, currentPageSize);
-            setSearchTableOn(true);
-        } else {
-            setSearchTableOn(false);
-            updateTable();
-        }
-    }
+    const getOrSearch = (searchTerm = '', page, currentPageSize) => {
 
-    const getOrSearch = (searchTerm='', page, currentPageSize) => {
         if (searchTerm === '' || searchTerm === null) {
             getDepartmentsPaged(page, currentPageSize);
         } else {
@@ -44,7 +34,7 @@ function DepartmentTable() {
             <h1>Department Manager Temp</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 payload={departments}
-                searchMethod={testSearch}
+                searchMethod={getSearchDepartments}
                 getMethod={getDepartmentsPaged}
                 putMethod={putDepartment}
                 postMethod={postDepartment}
@@ -54,22 +44,24 @@ function DepartmentTable() {
         </>
     );
 
-    async function getDepartments() {
-        try {
-            const response = await fetch('API/Departments', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`,
-                },
-            });
-            const data = await response.json();
-            setDepartments(data);
-        } catch (exception) {
-            console.error('Issue fetching Departments list', exception);
-        }
-    }
+    //async function getDepartments() {
+
+    //    try {
+    //        const response = await fetch('API/Departments', {
+    //            method: 'GET',
+    //            headers: {
+    //                'Authorization': `Bearer ${getToken()}`,
+    //            },
+    //        });
+    //        const data = await response.json();
+    //        setDepartments(data);
+    //    } catch (exception) {
+    //        console.error('Issue fetching Departments list', exception);
+    //    }
+    //}
 
     async function getDepartmentsPaged(page, pageSize) {
+
         try {
             const response = await fetch(`API/Departments/Paged?page=${page}&pageSize=${pageSize}`, {
                 method: 'GET',
@@ -78,18 +70,16 @@ function DepartmentTable() {
                 },
             });
             const responseJson = await response.json();
-            setDepartments(responseJson); ///was responeJson.data
+            setDepartments(responseJson); 
             setCurrentPage(page);
             setCurrentPageSize(pageSize);
-            //console.log("Response from dept controller:");
-            //console.log(responseJson);
         } catch (exception) {
             console.error('Issue fetching Departments list', exception);
         }
     }
 
     async function getSearchDepartments(searchTerm, page, pageSize) {
-        //console.log(searchTerm);
+        setCurrentPage(1);
         try {
 
             const response = await fetch(`API/Departments/Search?searchTerm=${searchTerm}&page=${page}&pageSize=${pageSize}`, {
@@ -103,8 +93,6 @@ function DepartmentTable() {
             setDepartments(responseJson);
             setCurrentPage(page);
             setCurrentPageSize(pageSize);
- ///was responeJson.data
-
             //setSearchTableOn(true);
             //updateTable();
             //console.log("Response from dept controller:");
@@ -115,6 +103,7 @@ function DepartmentTable() {
     }
 
     async function postDepartment(newRow) {
+
         try {
             const response = await fetch('API/Departments', {
                 method: 'POST',
@@ -132,6 +121,7 @@ function DepartmentTable() {
     }
 
     async function putDepartment(row) {
+
         try {
             console.log('abc');
 
@@ -156,6 +146,7 @@ function DepartmentTable() {
     }
 
     async function deleteDepartment(row) {
+
         try {
             const id = row.id;
 
@@ -166,9 +157,10 @@ function DepartmentTable() {
                     'Authorization': `Bearer ${getToken()}`,
                 },
             });
-            if (departments.data.length === 1) {
+            if (departments.data.length === 1 || departments.data.length === 0) {
                 setCurrentPage(currentPage - 1);
             };
+            //setCurrentPage(1);
             updateTable();
         } catch (exception) {
             console.error('Issue accessing and updating Departments table', exception);
@@ -180,53 +172,4 @@ function getToken() {
     return localStorage.getItem('token');
 }
 
-
 export default DepartmentTable;
-
-
-//const [curRow, setCurRow] = useState(null);
-//const handleUpdateNewRow = (newDepartment) => {
-//    newDepartment = { 'id': 'Pending', ...newDepartment };
-//    setDepartments((prevDepartments) => [...prevDepartments, newDepartment]);
-//};
-
-//const handleUpdate = (updatedRow) => {
-//    const hasId = updatedRow?.id !== undefined;
-//    //hasId ? handleUpdateEditRow(updatedRow) : handleUpdateNewRow(updatedRow);
-//    handleEditRow(updatedRow);
-//};
-
-//const updateTable = async () => {
-//    const newData = await postDepartment(curRow);
-//    handleAddNew(newData);
-//};
-
-//const handleAddNew = (newData) => {
-//    setDepartments((data) => [...data, newData]);
-//};
-
-//const handleEditRow = (updatedRow) => {
-//    setDepartments((data) =>
-//        data.map((row) =>
-//            row.id === updatedRow.id ? updatedRow : row
-//        )
-//    );
-//};
-
-//const handleDeleteRow = (removedRow) => {
-//    //something something filter
-//    setDepartments((data) =>
-//        data.filter(row => row.id != removedRow.id).map(
-//            filtered => (
-//                filtered
-//            )
-//        )
-//    );
-//    setRefreshTable(!refreshTable);
-//};
-
-//useEffect(() => {
-//    if (curRow != null) {
-//        updateTable();
-//    }
-//}, [curRow]);

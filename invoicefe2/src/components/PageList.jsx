@@ -31,8 +31,13 @@ function PageList({ curPage, setCurPage, totalPages, pageSize, setPageSize }) {
     }
 
     useEffect(() => {
+        if (curPage > end || curPage === 0) {
+            setCurPage(1);
+        } 
         getPageListBounds(curPage);
-    }, [totalPages]);
+
+    }, [totalPages, curPage]);
+
 
     const getPageListBounds = (page) => {
 
