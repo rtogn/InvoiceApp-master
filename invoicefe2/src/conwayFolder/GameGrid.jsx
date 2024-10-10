@@ -10,16 +10,43 @@ function GameGrid() {
     const [start, setStart] = useState(false);
     const [generationCounter, setGenerationCounter] = useState(0);
     const [generations, setGenerations] = useState(1);
+    const [clickMode, setClickMode] = useState('point');
 
     function timeout(delay) {
         return new Promise(res => setTimeout(res, delay));
     }
 
     const toggleBox = (index) => {
-        const newBoxes = [...boxes];
-        newBoxes[index] = !newBoxes[index];
-        console.log(index);
-        setBoxes(newBoxes);
+        //const newBoxes = [...boxes];
+        
+        switch (clickMode) {
+            case 'point':
+                setPoint(index);
+                break;
+            case 'box':
+                setBox(index);
+                break;
+            case 'glider':
+                setGlider(index);
+                break;
+            case 'pulsar':
+                setPulsar();
+                break;
+            case 'rpentomino':
+                setRpentomino(index);
+                break;
+            case 'pentadecathlon':
+                setPentaDecathlon();
+                break;
+            case 'blinker':
+                setBlinker(index);
+                break;
+            case 'toad':
+                setToad(index);
+                break;
+            default:
+                console.log("nothing");
+        }
     }
 
     const clear = () => {
@@ -45,6 +72,7 @@ function GameGrid() {
     }
 
     useEffect(() => {
+        //console.log(boxes);
         if (start && generationCounter < generations) {
             runNextGeneration();
         }
@@ -79,83 +107,8 @@ function GameGrid() {
             setGenerationCounter(prev => prev + 1);
     }
 
-    const setStar = () => {
-        const newBoxes = [...boxes];
-        newBoxes[65] = true;
-        newBoxes[66] = true;
-        newBoxes[72] = true;
-        newBoxes[73] = true;
-        newBoxes[86] = true;
-        newBoxes[87] = true;
-        newBoxes[91] = true;
-        newBoxes[92] = true;
-        newBoxes[103] = true;
-        newBoxes[106] = true;
-        newBoxes[108] = true;
-        newBoxes[110] = true;
-        newBoxes[112] = true;
-        newBoxes[115] = true;
-        newBoxes[123] = true;
-        newBoxes[124] = true;
-        newBoxes[125] = true;
-        newBoxes[127] = true;
-        newBoxes[128] = true;
-        newBoxes[130] = true;
-        newBoxes[131] = true;
-        newBoxes[133] = true;
-        newBoxes[134] = true;
-        newBoxes[135] = true;
-        newBoxes[144] = true;
-        newBoxes[146] = true;
-        newBoxes[148] = true;
-        newBoxes[150] = true;
-        newBoxes[152] = true;
-        newBoxes[154] = true;
-        newBoxes[165] = true;
-        newBoxes[166] = true;
-        newBoxes[167] = true;
-        newBoxes[171] = true;
-        newBoxes[172] = true;
-        newBoxes[173] = true;
-        newBoxes[205] = true;
-        newBoxes[206] = true;
-        newBoxes[207] = true;
-        newBoxes[211] = true;
-        newBoxes[212] = true;
-        newBoxes[213] = true;
-        newBoxes[224] = true;
-        newBoxes[226] = true;
-        newBoxes[228] = true;
-        newBoxes[230] = true;
-        newBoxes[232] = true;
-        newBoxes[234] = true;
-        newBoxes[243] = true;
-        newBoxes[244] = true;
-        newBoxes[245] = true;
-        newBoxes[247] = true;
-        newBoxes[248] = true;
-        newBoxes[250] = true;
-        newBoxes[251] = true;
-        newBoxes[253] = true;
-        newBoxes[254] = true;
-        newBoxes[255] = true;
-        newBoxes[263] = true;
-        newBoxes[266] = true;
-        newBoxes[268] = true;
-        newBoxes[270] = true;
-        newBoxes[272] = true;
-        newBoxes[275] = true;
-        newBoxes[286] = true;
-        newBoxes[287] = true;
-        newBoxes[291] = true;
-        newBoxes[292] = true;
-        newBoxes[305] = true;
-        newBoxes[306] = true;
-        newBoxes[312] = true;
-        newBoxes[313] = true;
-        setBoxes(newBoxes);
-
-
+    const handleClickModeChange = (event) => {
+        setClickMode(event.target.value);
     }
 
     const runSimulation = (generations) => {
@@ -164,20 +117,118 @@ function GameGrid() {
         setGenerationCounter(0);   
     }
 
+    const setPoint = (index) => {
+        // Set click location to spawn a single point
+        const newBoxes = [...boxes];
+        newBoxes[index] = !newBoxes[index];
+        setBoxes(newBoxes);
+    }
+
+    const setRpentomino = (index) => {
+        // Set click location to spawn an Rpentomino
+        const newBoxes = [...boxes];
+        newBoxes[index] = true;
+        newBoxes[index + 1] = true;
+        newBoxes[index + VERT_DIST] = true;
+        newBoxes[index + VERT_DIST - 1] = true;
+        newBoxes[index + VERT_DIST * 2] = true;
+        setBoxes(newBoxes);
+    }
+
+    const setBox = (index) => {
+        // Set click location to spawn a glider
+        const newBoxes = [...boxes];
+        newBoxes[index] = true;
+        newBoxes[index + 1] = true;
+        newBoxes[index + VERT_DIST] = true;
+        newBoxes[index + VERT_DIST + 1] = true;
+        setBoxes(newBoxes);
+    }
+
+    const setToad = (index) => {
+        // Set click location to spawn a Toad
+        const newBoxes = [...boxes];
+        newBoxes[index] = true;
+        newBoxes[index + 1] = true;
+        newBoxes[index - 1] = true;
+        newBoxes[index + VERT_DIST - 1] = true;
+        newBoxes[index + VERT_DIST] = true;
+        newBoxes[index + VERT_DIST - 2] = true;
+        setBoxes(newBoxes);
+    }
+
+    const setGlider = (index) => {
+        // Set click location to spawn a glider
+        const newBoxes = [...boxes];
+        newBoxes[index] = true;
+        newBoxes[index + VERT_DIST + 1] = true;
+        newBoxes[index + (VERT_DIST * 2)] = true;
+        newBoxes[index + (VERT_DIST * 2) + 1] = true;
+        newBoxes[index + (VERT_DIST * 2) - 1] = true;
+        setBoxes(newBoxes);
+    }
+
+
+    const setPentaDecathlon = () => {
+        // Set grid to be a PentaDecathlon 
+        const newBoxes = [...boxes];
+        const set = [89, 108, 109, 110, 127, 128, 129, 130,
+            131, 267, 268, 269, 270, 271, 288, 289, 290, 309
+        ];
+
+        for (let i = 0; i < set.length; i++) {
+            newBoxes[set[i]] = true;
+        }
+
+        setBoxes(newBoxes);
+    }
+
+    const setPulsar = () => {
+        // Set grid to be a pulsar 
+        const newBoxes = [...boxes];
+        const set = [65, 66, 72, 73, 86, 87, 91, 92, 103, 106,
+            108, 110, 112, 115, 123, 124, 125, 127,
+            128, 130, 131, 133, 134, 135, 144, 146,
+            148, 150, 152, 154, 165, 166, 167, 171,
+            172, 173, 205, 206, 207, 211, 212, 213,
+            224, 226, 228, 230, 232, 234, 243, 244,
+            245, 247, 248, 250, 251, 253, 254, 255,
+            263, 266, 268, 270, 272, 275, 286, 287,
+            291, 292, 305, 306, 312, 313
+        ];
+
+        for (let i = 0; i < set.length; i++) {
+            newBoxes[set[i]] = true;
+        }
+
+        setBoxes(newBoxes);
+    }
     return (
         <>
-            <button onClick={() => runSimulation(30) }>Start</button>
+            <button onClick={() => runSimulation(100) }>Start</button>
             <button onClick={() => setStart(false)}>Pause</button>
             <button onClick={() => runSimulation(1)}>{'>>'}</button>
-            <button onClick={setStar}>Star</button>
             <button onClick={clear}>Clear</button>
+
+            <select value={clickMode} onChange={handleClickModeChange}>
+                <option value="point">point</option>
+                <option value="box">box</option>
+                <option value="glider">glider</option>
+                <option value="pulsar">pulsar</option>
+                <option value="toad">toad</option>
+                <option value="blinker">blinker</option>
+                <option value="rpentomino">Rpentomino</option>
+                <option value="pentadecathlon">pentadecathlon</option>
+            </select>
+
+
             <div className="grid">
                 {boxes.map((isWhite, index) => (
                     <div
                         key={index}
                         className={`box ${isWhite ? '' : 'black'}`}
                         onClick={() => {
-                            toggleBox(index);
+                            toggleBox(index, clickMode);
                         }}
                     ></div>
                 ))}
