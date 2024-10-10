@@ -130,6 +130,35 @@ namespace InvoiceApp.Controllers
             return WorkOrderToDTO(workOrder);
         }
 
+        [HttpGet("Paged/")]
+        public async Task<ActionResult<IEnumerable<WorkOrderDTO>>> GetWorkOrdersPagnated(int page = 1, int pageSize = 10)
+        {
+            if (_context.WorkOrders == null)
+            {
+                return NotFound();
+            }
+            var totalRecords = await _context.WorkOrders.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            var workOrders = await _context.WorkOrders
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            List<WorkOrderDTO> WorkOrderDTOs = _mapper.Map<List<WorkOrderDTO>>(workOrders);
+
+            var response = new
+            {
+                Data = WorkOrderDTOs,
+                Page = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = totalPages
+            };
+
+            return Ok(response);
+        }
+
         // PUT: api/WorkOrders/5
         [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         public async Task<IActionResult> CompleteWorkOrderAtTime([FromRoute] int id, [FromBody] DateTime dateCompleted)
