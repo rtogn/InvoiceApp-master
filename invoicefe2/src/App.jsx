@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import DepartmentTable from './components/DepartmentTable';
 import WorkOrderTable from './components/WorkOrderTable';
 import ConwaysGOL from './components/ConwaysGOL';
+import GB from './components/GB';
 import MenuPage from './components/MenuPage';
 import './App.css';
 
@@ -30,7 +31,8 @@ function App() {
     const pageList = [
         { route: 'departments', title: 'Departments Table' },
         { route: 'workorders', title: 'Work Orders Table' },
-        { route: 'conwaysGOL', title: 'Conways Game' }
+        { route: 'conwaysGOL', title: 'Conways Game' },
+        { route: 'GB', title: 'GB' }
     ];
 
     return (
@@ -44,6 +46,7 @@ function App() {
                 {currentPage === 'departments' && isAuthenticated && <DepartmentTable />}
                 {currentPage === 'workorders' && isAuthenticated && <WorkOrderTable />}
                 {currentPage === 'conwaysGOL' && isAuthenticated && <ConwaysGOL />}
+                {currentPage === 'GB' && isAuthenticated && <GB />}
 
                 {currentPage != 'menu' && isAuthenticated &&
                     <button onClick={() => { routeTo('menu') }}>{'<< Back'}</button>

@@ -31,7 +31,7 @@ function DepartmentTable() {
 
     return (
         <>
-            <h1>Department Manager Temp</h1>
+            <h1>Department Manager</h1>
             <DataTable headers={['ID', 'Name', 'Short Code']}
                 payload={departments}
                 searchMethod={getSearchDepartments}

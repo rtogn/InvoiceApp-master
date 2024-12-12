@@ -200,7 +200,7 @@ namespace InvoiceApp.Controllers
         }
 
         // PUT: api/WorkOrders/5
-        [HttpPut("AddDepartmentToWorkOrder/{id}"), Authorize]
+        [HttpPut("AddDepartmentToWorkOrder/{id}")]
         public async Task<IActionResult> AddDepartmentToWorkOrder([FromRoute] int id, [FromBody] WorkOrderDepartmentsDTO workOrderDepartmentsDTO)
         {
 

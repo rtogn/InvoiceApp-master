@@ -1,0 +1,30 @@
+
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(160, 4px);
+    grid-template-rows: repeat(144, 4px);
+    gap: 0px;
+    margin: 25px;
+
+
+}
+
+.box {
+    width: 4px;
+    height: 4px;
+    background-color: green;
+    cursor: pointer;
+    padding: 0; /* Ensure no padding */
+    margin: 0;
+}
+
+.box.black {
+    background-color: #8bac0f;
+}
+
+.aCanvas {
+    border: grey;
+    color: white;
+    background-color: #8bac0f;
+}

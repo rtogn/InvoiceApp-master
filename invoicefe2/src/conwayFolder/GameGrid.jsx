@@ -20,9 +20,6 @@ function GameGrid() {
         //const newBoxes = [...boxes];
         
         switch (clickMode) {
-            case 'point':
-                setPoint(index);
-                break;
             case 'box':
                 setBox(index);
                 break;
@@ -45,7 +42,7 @@ function GameGrid() {
                 setToad(index);
                 break;
             default:
-                console.log("nothing");
+                setPoint(index);
         }
     }
 
@@ -84,19 +81,18 @@ function GameGrid() {
 
                 const neighborCount = checkBounds(j);
                 if (boxes[j] == true) { //Alive
-                    if (neighborCount < 2) {
+                    if (neighborCount < 2 || neighborCount > 3) {
                         newBoxes[j] = false; // Kill if less than 2 neighbors (underpopulation)
 
-                    } else if (neighborCount == 2 || neighborCount == 3) {
-                        newBoxes[j] = true; // Keep alive if 2 or 3 neighbors (Stable)
-                    } else if (neighborCount > 3) {
-                        newBoxes[j] = false; // Kill if > 3 neighbors (overpopulation)
+                    //} else if (neighborCount == 2 || neighborCount == 3) {
+                    //    newBoxes[j] = true; // Keep alive if 2 or 3 neighbors (Stable)
+                    //} else if (neighborCount > 3) {
+                    //    newBoxes[j] = false; // Kill if > 3 neighbors (overpopulation)
                     }
 
                 } else { //Dead
                     if (neighborCount == 3) {
                         newBoxes[j] = true // Live by reproduction if neighbors == 3
-                        console.log("dead");
                     }
                 }
             }
@@ -104,7 +100,7 @@ function GameGrid() {
         await timeout(350);
 
 
-            setGenerationCounter(prev => prev + 1);
+        setGenerationCounter(prev => prev + 1);
     }
 
     const handleClickModeChange = (event) => {
@@ -142,6 +138,15 @@ function GameGrid() {
         newBoxes[index + 1] = true;
         newBoxes[index + VERT_DIST] = true;
         newBoxes[index + VERT_DIST + 1] = true;
+        setBoxes(newBoxes);
+    }
+
+    const setBlinker = (index) => {
+        // Set click location to spawn a Toad
+        const newBoxes = [...boxes];
+        newBoxes[index] = true;
+        newBoxes[index + 1] = true;
+        newBoxes[index - 1] = true;
         setBoxes(newBoxes);
     }
 
@@ -220,7 +225,6 @@ function GameGrid() {
                 <option value="rpentomino">Rpentomino</option>
                 <option value="pentadecathlon">pentadecathlon</option>
             </select>
-
 
             <div className="grid">
                 {boxes.map((isWhite, index) => (

@@ -1,14 +1,14 @@
 import GBGrid from '../conwayFolder/GBGrid';
 import GameGrid from '../conwayFolder/GameGrid';
 
-function ConwaysGOL() {
+function GB() {
 
     return (
         <>
-            <h1>REACT CONWAYS GAME OF LIFE</h1>
-            <GameGrid />
+            <h1>GB</h1>
+            <GBGrid />
         </>
     );
 };
 
-export default ConwaysGOL;
+export default GB;
