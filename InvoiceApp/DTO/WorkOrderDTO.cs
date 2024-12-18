@@ -9,7 +9,7 @@ namespace InvoiceApp.DTO
         public string FacilityName { get; set; }
         public DateTime DateSubmitted { get; set; }
         public DateTime? DateCompleted { get; set; }
-        public List<int> Departments { get; set; }
+        public List<string> Departments { get; set; }
 
     }
 }

@@ -48,6 +48,7 @@ function WorkOrderTable() {
             data: payload.data.map(item => {
                 return {
                     ...item,
+                    departments: item.departments.join(", "),
                     dateSubmitted: formatDate(item.dateSubmitted),
                     dateCompleted: formatDate(item.dateCompleted)
                 };
@@ -82,6 +83,7 @@ function WorkOrderTable() {
             });
             const responseJson = await response.json();
             const formattedResponseJson = payloadFormatting(responseJson);
+            console.log(formattedResponseJson);
             setWorkOrderPageData(formattedResponseJson);
             setCurrentPage(page);
             setCurrentPageSize(pageSize);

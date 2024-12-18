@@ -142,6 +142,7 @@ namespace InvoiceApp.Controllers
 
             var workOrders = await _context.WorkOrders
                 .Skip((page - 1) * pageSize)
+                .Include(w => w.Departments)
                 .Take(pageSize)
                 .ToListAsync();
 
