@@ -19,6 +19,7 @@ function GBGrid() {
             <div>   </div>
             <Dissassembler />
             <Registers></Registers>
+            <Memory />
 
         </>
     );

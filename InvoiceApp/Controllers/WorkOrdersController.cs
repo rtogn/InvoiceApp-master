@@ -160,6 +160,54 @@ namespace InvoiceApp.Controllers
             return Ok(response);
         }
 
+        // GET: api/Departments/Paged?page=1&pageSize=10
+
+        [HttpGet("Search/")]
+        public async Task<ActionResult<IEnumerable<WorkOrderDTO>>> GetSearchWorkOrdersPagnated(
+            string searchTerm,
+            int page = 1,
+            int pageSize = 10)
+        {
+            if (_context.WorkOrders == null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve all records from _context for Departments
+            var workOrders = from w in _context.WorkOrders
+                              select w;
+
+
+            // Filter down those results based on search term
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                workOrders = workOrders.Where(w => w.OrderId.ToString().Equals(searchTerm) || 
+                    w.FacilityName.Contains(searchTerm) || 
+                    w.JobDescription.Contains(searchTerm))
+                    ;
+            }
+
+            var totalRecords = workOrders.Count();
+            var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            workOrders = workOrders
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+            List<WorkOrder> WorkOrderLists = await workOrders.ToListAsync();
+            List<WorkOrderDTO> WorkOrderDTOs = _mapper.Map<List<WorkOrderDTO>>(workOrders);
+
+            var response = new
+            {
+                Data = WorkOrderDTOs,
+                Page = page,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = totalPages
+            };
+
+            return Ok(response);
+        }
+
+        //        [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         // PUT: api/WorkOrders/5
         [HttpPut("CompleteWorkOrderAtTime/{id}"), Authorize]
         public async Task<IActionResult> CompleteWorkOrderAtTime([FromRoute] int id, [FromBody] DateTime dateCompleted)

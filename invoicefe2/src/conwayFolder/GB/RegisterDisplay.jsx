@@ -36,7 +36,7 @@ const RegisterDisplay = () => {
 
             <button onClick={() => getRegister('f')}>set</button>
             <button onClick={() => testFunctions()}>test</button>
-            <button onClick={() => setRegister('a', CPURegisters.get('a')[0] + 1)}>Moop</button>
+            <button onClick={() => setRegister('a', CPURegisters.get('a')[0] + 1)}>Increment A</button>
 
         </>
     );
